@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "name": "blogs-api-nest",
   "builds": [
     { "src": "src/main.ts", "use": "@vercel/node" }
