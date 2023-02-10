@@ -54,6 +54,7 @@ export class PostsController {
   }
 
   @Put(':id')
+  @HttpCode(204)
   async updatePost(
     @Param('id') id: string,
     @Body() postInputModel: PostCreateInputModel,
