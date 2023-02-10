@@ -5,6 +5,7 @@ export type BlogsForResponse = {
   description: string;
   websiteUrl: string;
   createdAt: Date;
+  isMembership: boolean;
 };
 
 export type BlogsPaginationResponse = {

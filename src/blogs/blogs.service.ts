@@ -22,6 +22,7 @@ export class BlogsService {
       blog.description,
       blog.websiteUrl,
       new Date(),
+      false,
     );
 
     await this.blogsRepository.createBlog(newBlog);
@@ -31,6 +32,7 @@ export class BlogsService {
       description: newBlog.description,
       websiteUrl: newBlog.websiteUrl,
       createdAt: newBlog.createdAt,
+      isMembership: newBlog.isMembership,
     };
   }
 

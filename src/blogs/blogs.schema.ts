@@ -19,6 +19,9 @@ export class Blog {
 
   @Prop({ required: true })
   createdAt: Date;
+
+  @Prop({ required: true })
+  isMembership: boolean;
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
