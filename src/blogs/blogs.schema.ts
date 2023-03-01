@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { BlogCreateInputModelType } from '../types/input.models';
 
 export type BlogDocument = HydratedDocument<Blog>;
 
@@ -22,6 +23,15 @@ export class Blog {
 
   @Prop({ required: true })
   isMembership: boolean;
+
+  updateBlog(updateData: BlogCreateInputModelType) {
+    this.name = updateData.name;
+    this.description = updateData.description;
+    this.websiteUrl = updateData.websiteUrl;
+  }
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
+BlogSchema.methods = {
+  updateBlog: Blog.prototype.updateBlog,
+};

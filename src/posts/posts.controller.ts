@@ -10,7 +10,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { PostCreateInputModel } from '../types/input.models';
+import { PostCreateInputModelType } from '../types/input.models';
 import { PostsService } from './posts.service';
 import { PostsQueryRepository } from './posts.query.repo';
 import { PaginationDto } from '../types/dto';
@@ -26,7 +26,7 @@ export class PostsController {
 
   @Post()
   @HttpCode(201)
-  async createPost(@Body() postInputModel: PostCreateInputModel) {
+  async createPost(@Body() postInputModel: PostCreateInputModelType) {
     return this.postsService.createPost(postInputModel);
   }
 
@@ -57,7 +57,7 @@ export class PostsController {
   @HttpCode(204)
   async updatePost(
     @Param('id') id: string,
-    @Body() postInputModel: PostCreateInputModel,
+    @Body() postInputModel: PostCreateInputModelType,
   ) {
     const isUpdated = await this.postsService.updatePost(id, postInputModel);
     if (!isUpdated) throw new NotFoundException('Post not found');

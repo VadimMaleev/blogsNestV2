@@ -18,4 +18,44 @@ export class UsersRepository {
     await userInstance.deleteOne();
     return true;
   }
+
+  async updateConfirmation(id: string) {
+    const confirmationInstance: UserDocument = await this.userModel.findOne({
+      id: id,
+    });
+    if (!confirmationInstance) return false;
+
+    confirmationInstance.updateConfirmationStatus(true);
+    await confirmationInstance.save();
+    return true;
+  }
+
+  async updateConfirmCode(
+    userId: string,
+    confirmCode: string,
+    expirationDate: Date,
+  ) {
+    const confirmationInstance: UserDocument = await this.userModel.findOne({
+      id: userId,
+    });
+    if (!confirmationInstance) return null;
+
+    confirmationInstance.updateConfirmationCode(confirmCode, expirationDate);
+    await confirmationInstance.save();
+    return true;
+  }
+
+  async updatePassword(
+    newPasswordHash: string,
+    userId: string,
+  ): Promise<boolean> {
+    const userInstance: UserDocument = await this.userModel.findOne({
+      id: userId,
+    });
+    if (!userInstance) return false;
+
+    userInstance.updatePasswordHash(newPasswordHash);
+    await userInstance.save();
+    return true;
+  }
 }

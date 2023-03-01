@@ -24,11 +24,9 @@ export class BlogsRepository {
     id: string,
     inputModel: BlogCreateInputModelType,
   ): Promise<boolean> {
-    const blogInstance = await this.blogModel.findOne({ id: id });
+    const blogInstance: BlogDocument = await this.blogModel.findOne({ id: id });
     if (!blogInstance) return false;
-    blogInstance.name = inputModel.name;
-    blogInstance.description = inputModel.description;
-    blogInstance.websiteUrl = inputModel.websiteUrl;
+    blogInstance.updateBlog(inputModel);
 
     await blogInstance.save();
     return true;

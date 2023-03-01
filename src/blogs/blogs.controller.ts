@@ -14,7 +14,7 @@ import { BlogsService } from './blogs.service';
 import { BlogsQueryRepository } from './blogs.query.repo';
 import {
   BlogCreateInputModelType,
-  PostCreateInputModel,
+  PostCreateInputModelType,
 } from '../types/input.models';
 import { BlogsQueryDto, PaginationDto } from '../types/dto';
 import { PostsService } from '../posts/posts.service';
@@ -70,7 +70,7 @@ export class BlogsController {
   @HttpCode(201)
   async createPostForBlog(
     @Param('id') id: string,
-    @Body() postInputModel: PostCreateInputModel,
+    @Body() postInputModel: PostCreateInputModelType,
   ) {
     const blog = await this.blogsQueryRepository.getOneBlogById(id);
     if (!blog) throw new NotFoundException('Blog not found');

@@ -25,6 +25,19 @@ import { CommentsService } from './comments/comments.service';
 import { CommentsRepository } from './comments/comments.repo';
 import { CommentsQueryRepository } from './comments/comments.query.repo';
 import { TestingController } from './testing/testing.controller';
+import {
+  RecoveryCode,
+  RecoveryCodeSchema,
+} from './recovery.codes/recovery.code.schema';
+import { RecoveryCodeRepository } from './recovery.codes/recovery.code.repo';
+import { EmailAdapter } from './adapters/email-adapter';
+import { JWTService } from './application/jwt.service';
+import { AuthController } from './auth/auth.controller';
+import { DevicesRepository } from './devices/devices.repository';
+import { DevicesQueryRepository } from './devices/devices.query.repository';
+import { Device, DeviceSchema } from './devices/devices.schema';
+import { JwtAuthGuard } from './guards/jwt.auth.guard';
+import { JwtRefreshAuthGuard } from './guards/jwt.refresh.auth.guard';
 
 @Module({
   imports: [
@@ -35,6 +48,8 @@ import { TestingController } from './testing/testing.controller';
       { name: User.name, schema: UserSchema },
       { name: Post.name, schema: PostSchema },
       { name: Comment.name, schema: CommentSchema },
+      { name: RecoveryCode.name, schema: RecoveryCodeSchema },
+      { name: Device.name, schema: DeviceSchema },
     ]),
   ],
   controllers: [
@@ -44,6 +59,7 @@ import { TestingController } from './testing/testing.controller';
     PostsController,
     CommentsController,
     TestingController,
+    AuthController,
   ],
   providers: [
     AppService,
@@ -60,6 +76,14 @@ import { TestingController } from './testing/testing.controller';
     CommentsService,
     CommentsRepository,
     CommentsQueryRepository,
+    RecoveryCodeRepository,
+    EmailAdapter,
+    JWTService,
+    DevicesRepository,
+    DevicesQueryRepository,
+    JwtAuthGuard,
+    JwtRefreshAuthGuard,
   ],
+  exports: [UsersQueryRepository, JWTService],
 })
 export class AppModule {}

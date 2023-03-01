@@ -28,6 +28,24 @@ export class User {
 
   @Prop({ required: true })
   isConfirmed: boolean;
+
+  updateConfirmationStatus(status: boolean) {
+    this.isConfirmed = status;
+  }
+
+  updateConfirmationCode(code: string, date: Date) {
+    this.confirmationCode = code;
+    this.codeExpirationDate = date;
+  }
+
+  updatePasswordHash(newPasswordHash: string) {
+    this.passwordHash = newPasswordHash;
+  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.methods = {
+  updateStatus: User.prototype.updateConfirmationStatus,
+  updateConfirmationCode: User.prototype.updateConfirmationCode,
+  updatePasswordHash: User.prototype.updatePasswordHash,
+};

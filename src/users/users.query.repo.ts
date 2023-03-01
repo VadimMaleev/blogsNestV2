@@ -48,4 +48,26 @@ export class UsersQueryRepository {
       items,
     };
   }
+
+  async findUserByEmail(email: string) {
+    return this.userModel.findOne({ email: email });
+  }
+
+  async findUserByLogin(login: string) {
+    return this.userModel.findOne({ login: login });
+  }
+
+  async findUserByCode(code: string) {
+    return this.userModel.findOne({ confirmationCode: code });
+  }
+
+  async findUserByLoginOrEmail(loginOrEmail: string) {
+    return this.userModel.findOne({
+      $or: [{ login: loginOrEmail }, { email: loginOrEmail }],
+    });
+  }
+
+  async findUserById(id: string) {
+    return this.userModel.findOne({ userId: id });
+  }
 }

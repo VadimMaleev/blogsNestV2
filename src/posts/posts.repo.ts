@@ -3,7 +3,7 @@ import { CreatePostDto } from '../types/dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from './posts.schema';
 import { Model } from 'mongoose';
-import { PostCreateInputModel } from '../types/input.models';
+import { PostCreateInputModelType } from '../types/input.models';
 
 @Injectable()
 export class PostsRepository {
@@ -22,14 +22,11 @@ export class PostsRepository {
 
   async updatePost(
     id: string,
-    postInputModel: PostCreateInputModel,
+    postInputModel: PostCreateInputModelType,
   ): Promise<boolean> {
-    const postInstance = await this.postModel.findOne({ id: id });
+    const postInstance: PostDocument = await this.postModel.findOne({ id: id });
     if (!postInstance) return false;
-    postInstance.title = postInputModel.title;
-    postInstance.shortDescription = postInputModel.shortDescription;
-    postInstance.content = postInputModel.content;
-    postInstance.blogId = postInputModel.blogId;
+    postInstance.updatePost(postInputModel);
 
     await postInstance.save();
     return true;

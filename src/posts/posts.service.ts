@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PostCreateInputModel } from '../types/input.models';
+import { PostCreateInputModelType } from '../types/input.models';
 import { BlogsQueryRepository } from '../blogs/blogs.query.repo';
 import { CreatePostDto } from '../types/dto';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,12 +15,18 @@ export class PostsService {
   ) {}
 
   async createPost(
-    postInputModel: PostCreateInputModel,
-  ): Promise<PostsForResponse> {
+    postInputModel: PostCreateInputModelType,
+  ): Promise<PostsForResponse | null> {
     const blog = await this.blogsQueryRepository.getOneBlogById(
       postInputModel.blogId,
     );
-    if (!blog) throw new BadRequestException('Blog not found');
+    if (!blog)
+      throw new BadRequestException([
+        {
+          message: 'bad blogId',
+          field: 'blogId',
+        },
+      ]);
 
     const newPost = new CreatePostDto(
       uuidv4(),
@@ -36,7 +42,7 @@ export class PostsService {
   }
 
   async createPostForBlog(
-    postInputModel: PostCreateInputModel,
+    postInputModel: PostCreateInputModelType,
     blog: BlogsForResponse,
   ) {
     const newPost = new CreatePostDto(
@@ -56,7 +62,7 @@ export class PostsService {
     return this.postRepository.deletePost(id);
   }
 
-  async updatePost(id: string, postInputModel: PostCreateInputModel) {
+  async updatePost(id: string, postInputModel: PostCreateInputModelType) {
     return this.postRepository.updatePost(id, postInputModel);
   }
 }

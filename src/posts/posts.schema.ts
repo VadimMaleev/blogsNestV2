@@ -1,5 +1,6 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { PostCreateInputModelType } from '../types/input.models';
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -25,6 +26,16 @@ export class Post {
 
   @Prop({ required: true })
   createdAt: Date;
+
+  updatePost(updateData: PostCreateInputModelType) {
+    this.title = updateData.title;
+    this.shortDescription = updateData.shortDescription;
+    this.content = updateData.content;
+    this.blogId = updateData.blogId;
+  }
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
+PostSchema.methods = {
+  updatePost: Post.prototype.updatePost,
+};

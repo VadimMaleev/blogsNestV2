@@ -51,3 +51,21 @@ export class CreatePostDto {
     public createdAt: Date,
   ) {}
 }
+
+export class RecoveryCodeDto {
+  constructor(
+    public code: string,
+    public codeExpirationDate: Date,
+    public userId: string,
+  ) {}
+}
+
+export class CreateDeviceDto {
+  constructor(
+    public ip: string,
+    public title: string,
+    public lastActiveDate: string,
+    public deviceId: string,
+    public userId: string,
+  ) {}
+}
