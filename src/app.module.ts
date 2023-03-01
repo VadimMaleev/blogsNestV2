@@ -36,8 +36,6 @@ import { AuthController } from './auth/auth.controller';
 import { DevicesRepository } from './devices/devices.repository';
 import { DevicesQueryRepository } from './devices/devices.query.repository';
 import { Device, DeviceSchema } from './devices/devices.schema';
-import { JwtAuthGuard } from './guards/jwt.auth.guard';
-import { JwtRefreshAuthGuard } from './guards/jwt.refresh.auth.guard';
 
 @Module({
   imports: [
@@ -81,9 +79,6 @@ import { JwtRefreshAuthGuard } from './guards/jwt.refresh.auth.guard';
     JWTService,
     DevicesRepository,
     DevicesQueryRepository,
-    JwtAuthGuard,
-    JwtRefreshAuthGuard,
   ],
-  exports: [UsersQueryRepository, JWTService],
 })
 export class AppModule {}
