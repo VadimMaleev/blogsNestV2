@@ -68,6 +68,6 @@ export class UsersQueryRepository {
   }
 
   async findUserById(id: string) {
-    return this.userModel.findOne({ userId: id });
+    return this.userModel.findOne({ id: id });
   }
 }

@@ -24,8 +24,8 @@ export class UsersRepository {
       id: id,
     });
     if (!confirmationInstance) return false;
+    confirmationInstance.isConfirmed = true;
 
-    confirmationInstance.updateConfirmationStatus(true);
     await confirmationInstance.save();
     return true;
   }
