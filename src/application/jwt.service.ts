@@ -7,7 +7,7 @@ import { settings } from '../settings/settings';
 export class JWTService {
   async createJWT(user: UserDocument) {
     return jwt.sign({ userId: user.id }, settings.JWT_SECRET, {
-      expiresIn: '20d',
+      expiresIn: '10s',
     });
   }
 
@@ -15,7 +15,7 @@ export class JWTService {
     return jwt.sign(
       { userId: user.id, deviceId: deviceId },
       settings.JWT_SECRET,
-      { expiresIn: '30d' },
+      { expiresIn: '20s' },
     );
   }
 
