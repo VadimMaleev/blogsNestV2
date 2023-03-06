@@ -21,6 +21,7 @@ import {
 import { UsersService } from '../users/users.service';
 import { JwtAuthGuard } from '../guards/jwt.auth.guard';
 import { JwtRefreshAuthGuard } from '../guards/jwt.refresh.auth.guard';
+import { IpRestrictionGuard } from '../middlewares/ip.restriction';
 
 @Controller('auth')
 export class AuthController {
@@ -32,6 +33,7 @@ export class AuthController {
 
   @Post('registration')
   @HttpCode(204)
+  @UseGuards(IpRestrictionGuard)
   async registration(@Body() userInputModel: UserCreateInputModelType) {
     const userEmail = await this.usersQueryRepository.findUserByEmail(
       userInputModel.email,
@@ -54,6 +56,7 @@ export class AuthController {
 
   @Post('registration-confirmation')
   @HttpCode(204)
+  @UseGuards(IpRestrictionGuard)
   async confirmation(@Body() input: { code: string }) {
     const result = await this.usersService.confirmUser(input.code);
     if (!result)
@@ -64,6 +67,7 @@ export class AuthController {
 
   @Post('registration-email-resending')
   @HttpCode(204)
+  @UseGuards(IpRestrictionGuard)
   async emailResending(@Body() inputModel: EmailInputModelType) {
     const user = await this.usersQueryRepository.findUserByEmail(
       inputModel.email,
@@ -94,6 +98,7 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(200)
+  @UseGuards(IpRestrictionGuard)
   async login(
     @Body() inputModel: LoginInputModelType,
     @Request() req,
@@ -119,6 +124,7 @@ export class AuthController {
 
   @Post('password-recovery')
   @HttpCode(204)
+  @UseGuards(IpRestrictionGuard)
   async passwordRecovery(@Body() inputModel: EmailInputModelType) {
     const user = await this.usersQueryRepository.findUserByEmail(
       inputModel.email,
@@ -129,6 +135,7 @@ export class AuthController {
 
   @Post('new-password')
   @HttpCode(204)
+  @UseGuards(IpRestrictionGuard)
   async newPassword(@Body() inputModel: NewPasswordInputModelType) {
     const result = await this.authService.newPassword(inputModel);
     if (!result)
