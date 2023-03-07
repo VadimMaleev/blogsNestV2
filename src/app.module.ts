@@ -37,6 +37,8 @@ import { DevicesRepository } from './devices/devices.repository';
 import { DevicesQueryRepository } from './devices/devices.query.repository';
 import { Device, DeviceSchema } from './devices/devices.schema';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { DevicesController } from './devices/devices.controller';
+import { DevicesService } from './devices/devices.service';
 
 @Module({
   imports: [
@@ -63,6 +65,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     CommentsController,
     TestingController,
     AuthController,
+    DevicesController,
   ],
   providers: [
     AppService,
@@ -82,6 +85,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     RecoveryCodeRepository,
     EmailAdapter,
     JWTService,
+    DevicesService,
     DevicesRepository,
     DevicesQueryRepository,
   ],

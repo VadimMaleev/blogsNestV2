@@ -15,10 +15,6 @@ export class DevicesQueryRepository {
       .lean();
   }
 
-  async findDeviceByDeviceAndUserId(deviceId: string, userId: string) {
-    return this.devicesModel.findOne({ userId, deviceId });
-  }
-
   async findDeviceByDeviceAndUserIdAndDate(
     deviceId: string,
     userId: string,
