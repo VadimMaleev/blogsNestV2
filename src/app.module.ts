@@ -36,11 +36,16 @@ import { AuthController } from './auth/auth.controller';
 import { DevicesRepository } from './devices/devices.repository';
 import { DevicesQueryRepository } from './devices/devices.query.repository';
 import { Device, DeviceSchema } from './devices/devices.schema';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.mongooseUri),
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 5,
+    }),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
       { name: User.name, schema: UserSchema },
