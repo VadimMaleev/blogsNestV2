@@ -148,7 +148,7 @@ export class AuthController {
   }
 
   @Post('refresh-token')
-  @HttpCode(201)
+  @HttpCode(200)
   @UseGuards(JwtRefreshAuthGuard)
   async refreshToken(@Request() req, @Res({ passthrough: true }) res) {
     const user = req.user;
