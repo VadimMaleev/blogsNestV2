@@ -40,6 +40,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { DevicesController } from './devices/devices.controller';
 import { DevicesService } from './devices/devices.service';
 import { JwtBlackList, JwtTokensSchema } from './auth/jwt.schema';
+import { JwtRepository } from './auth/jwt.repository';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { JwtBlackList, JwtTokensSchema } from './auth/jwt.schema';
     DevicesService,
     DevicesRepository,
     DevicesQueryRepository,
+    JwtRepository,
   ],
 })
 export class AppModule {}
