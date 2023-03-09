@@ -16,6 +16,7 @@ import { JWTService } from '../application/jwt.service';
 import { randomUUID } from 'crypto';
 import { DevicesRepository } from '../devices/devices.repository';
 import { DevicesQueryRepository } from '../devices/devices.query.repository';
+import { JwtRepository } from './jwt.repository';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +28,7 @@ export class AuthService {
     protected jwtService: JWTService,
     protected devicesRepository: DevicesRepository,
     protected devicesQueryRepository: DevicesQueryRepository,
+    protected jwtRepository: JwtRepository,
   ) {}
 
   async generateHash(password: string) {
@@ -140,6 +142,7 @@ export class AuthService {
         newLastActiveDate,
       );
     if (!isDateUpdated) return null;
+    await this.jwtRepository.expireRefreshToken(oldRefreshToken);
     return refreshToken;
   }
 

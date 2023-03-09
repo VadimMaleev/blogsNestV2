@@ -7,12 +7,14 @@ import {
 import { UsersQueryRepository } from '../users/users.query.repo';
 import { JWTService } from '../application/jwt.service';
 import { Request } from 'express';
+import { JwtRepository } from '../auth/jwt.repository';
 
 @Injectable()
 export class JwtRefreshAuthGuard implements CanActivate {
   constructor(
     protected usersQueryRepository: UsersQueryRepository,
     protected jwtService: JWTService,
+    protected jwtRepository: JwtRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -25,7 +27,10 @@ export class JwtRefreshAuthGuard implements CanActivate {
       refreshTokenFromCookie,
     );
     if (!payload) throw new UnauthorizedException();
-
+    const refreshTokenIsBlack = await this.jwtRepository.findAllExpiredTokens(
+      refreshTokenFromCookie,
+    );
+    if (refreshTokenIsBlack) throw new UnauthorizedException();
     const user = await this.usersQueryRepository.findUserById(payload.userId);
     if (!user) throw new UnauthorizedException();
     req.user = user;
