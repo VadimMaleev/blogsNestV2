@@ -10,7 +10,7 @@ export class JwtRepository {
   ) {}
 
   async expireRefreshToken(refreshToken: string) {
-    const tokenInstance = new this.tokensModel(refreshToken);
+    const tokenInstance = new this.tokensModel({ refreshToken: refreshToken });
     await tokenInstance.save();
 
     return tokenInstance;
