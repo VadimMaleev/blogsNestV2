@@ -152,6 +152,7 @@ export class AuthService {
     );
     const deviceId = jwtPayload.deviceId;
     const lastActiveDate = new Date(jwtPayload.iat * 1000).toISOString();
+    await this.jwtRepository.expireRefreshToken(oldRefreshToken);
     return this.devicesRepository.findAndDeleteDeviceByDeviceAndUserIdAndDate(
       userId,
       deviceId,
