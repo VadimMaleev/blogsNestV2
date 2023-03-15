@@ -33,7 +33,7 @@ export class CommentsController {
   async deleteCommentById(@Param('id') id: string, @Request() req) {
     const comment = await this.commentsQueryRepository.getCommentById(id);
     if (!comment) throw new NotFoundException();
-    if (comment.commentatorInfo.userId !== req.userId)
+    if (comment.commentatorInfo.userId !== req.user.id)
       throw new HttpException('Not your own', 403);
 
     const isDeleted = await this.commentsService.deleteCommentById(id);

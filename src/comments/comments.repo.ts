@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './comments.shema';
 import { Model } from 'mongoose';
+import { CreateCommentDto } from '../types/dto';
+import { mapCommentWithLikes } from '../helpers/map.comment.with.likes';
 
 @Injectable()
 export class CommentsRepository {
@@ -14,5 +16,10 @@ export class CommentsRepository {
 
     await commentInstance.deleteOne();
     return true;
+  }
+
+  async createComment(newComment: CreateCommentDto) {
+    await new this.commentModel(newComment).save();
+    return mapCommentWithLikes(newComment);
   }
 }

@@ -52,6 +52,17 @@ export class CreatePostDto {
   ) {}
 }
 
+export class CreateCommentDto {
+  constructor(
+    public id: string,
+    public content: string,
+    public userId: string,
+    public userLogin: string,
+    public createdAt: Date,
+    public postId: string,
+  ) {}
+}
+
 export class RecoveryCodeDto {
   constructor(
     public code: string,

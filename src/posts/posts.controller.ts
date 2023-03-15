@@ -9,14 +9,19 @@ import {
   Post,
   Put,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
-import { PostCreateInputModelType } from '../types/input.models';
+import {
+  CommentCreateInputModel,
+  PostCreateInputModelType,
+} from '../types/input.models';
 import { PostsService } from './posts.service';
 import { PostsQueryRepository } from './posts.query.repo';
 import { PaginationDto } from '../types/dto';
 import { CommentsQueryRepository } from '../comments/comments.query.repo';
 import { JwtAuthGuard } from '../guards/jwt.auth.guard';
+import { CommentsService } from '../comments/comments.service';
 
 @Controller('posts')
 export class PostsController {
@@ -24,6 +29,7 @@ export class PostsController {
     protected postsService: PostsService,
     protected postsQueryRepository: PostsQueryRepository,
     protected commentsQueryRepository: CommentsQueryRepository,
+    protected commentsService: CommentsService,
   ) {}
 
   @Post()
@@ -74,5 +80,22 @@ export class PostsController {
     const post = await this.postsQueryRepository.getPostById(id);
     if (!post) throw new NotFoundException('Post not found');
     return this.commentsQueryRepository.getCommentsForPost(id, query);
+  }
+
+  @Post(':id/comments')
+  @UseGuards(JwtAuthGuard)
+  async createComment(
+    @Body() inputModel: CommentCreateInputModel,
+    @Param('id') id: string,
+    @Request() req,
+  ) {
+    const post = await this.postsQueryRepository.getPostById(id);
+    if (!post) throw new NotFoundException();
+    return await this.commentsService.createComment(
+      id,
+      inputModel.content,
+      req.user.id,
+      req.user.login,
+    );
   }
 }

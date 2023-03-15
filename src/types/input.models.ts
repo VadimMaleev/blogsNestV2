@@ -55,3 +55,8 @@ export class NewPasswordInputModelType {
 
   recoveryCode: string;
 }
+
+export class CommentCreateInputModel {
+  @Length(20, 300)
+  content: string;
+}
