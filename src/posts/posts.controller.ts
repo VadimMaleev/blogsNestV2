@@ -9,12 +9,14 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PostCreateInputModelType } from '../types/input.models';
 import { PostsService } from './posts.service';
 import { PostsQueryRepository } from './posts.query.repo';
 import { PaginationDto } from '../types/dto';
 import { CommentsQueryRepository } from '../comments/comments.query.repo';
+import { JwtAuthGuard } from '../guards/jwt.auth.guard';
 
 @Controller('posts')
 export class PostsController {

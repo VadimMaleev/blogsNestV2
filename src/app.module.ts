@@ -39,8 +39,8 @@ import { Device, DeviceSchema } from './devices/devices.schema';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DevicesController } from './devices/devices.controller';
 import { DevicesService } from './devices/devices.service';
-import { JwtBlackList, JwtTokensSchema } from './auth/jwt.schema';
-import { JwtRepository } from './auth/jwt.repository';
+import { JwtBlackList, JwtTokensSchema } from './application/jwt.schema';
+import { JwtRepository } from './application/jwt.repository';
 
 @Module({
   imports: [

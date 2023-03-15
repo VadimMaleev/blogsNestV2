@@ -7,7 +7,7 @@ import {
 import { UsersQueryRepository } from '../users/users.query.repo';
 import { JWTService } from '../application/jwt.service';
 import { Request } from 'express';
-import { JwtRepository } from '../auth/jwt.repository';
+import { JwtRepository } from '../application/jwt.repository';
 
 @Injectable()
 export class JwtRefreshAuthGuard implements CanActivate {

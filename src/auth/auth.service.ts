@@ -16,7 +16,7 @@ import { JWTService } from '../application/jwt.service';
 import { randomUUID } from 'crypto';
 import { DevicesRepository } from '../devices/devices.repository';
 import { DevicesQueryRepository } from '../devices/devices.query.repository';
-import { JwtRepository } from './jwt.repository';
+import { JwtRepository } from '../application/jwt.repository';
 
 @Injectable()
 export class AuthService {
