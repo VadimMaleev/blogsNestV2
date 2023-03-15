@@ -22,4 +22,14 @@ export class CommentsRepository {
     await new this.commentModel(newComment).save();
     return mapCommentWithLikes(newComment);
   }
+
+  async updateComment(id: string, content: string): Promise<boolean> {
+    const commentInstance: CommentDocument = await this.commentModel.findOne({
+      id: id,
+    });
+    if (!commentInstance) return false;
+
+    commentInstance.updateComment(content);
+    await commentInstance.save();
+  }
 }

@@ -22,6 +22,13 @@ export class Comment {
 
   @Prop({ required: true })
   postId: string;
+
+  updateComment(content: string) {
+    this.content = content;
+  }
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
+CommentSchema.methods = {
+  updateComment: Comment.prototype.updateComment,
+};

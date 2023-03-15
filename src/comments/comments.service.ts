@@ -27,4 +27,8 @@ export class CommentsService {
     );
     return await this.commentsRepository.createComment(newComment);
   }
+
+  async updateComment(id: string, content: string): Promise<boolean> {
+    return await this.commentsRepository.updateComment(id, content);
+  }
 }
