@@ -22,6 +22,7 @@ import { PaginationDto } from '../types/dto';
 import { CommentsQueryRepository } from '../comments/comments.query.repo';
 import { JwtAuthGuard } from '../guards/jwt.auth.guard';
 import { CommentsService } from '../comments/comments.service';
+import { ExtractUserIdFromHeadersUseCase } from '../helpers/extract.userId.from.headers';
 
 @Controller('posts')
 export class PostsController {
@@ -30,6 +31,7 @@ export class PostsController {
     protected postsQueryRepository: PostsQueryRepository,
     protected commentsQueryRepository: CommentsQueryRepository,
     protected commentsService: CommentsService,
+    protected extractUserIdFromHeadersUseCase: ExtractUserIdFromHeadersUseCase,
   ) {}
 
   @Post()
@@ -76,10 +78,15 @@ export class PostsController {
   async getCommentsForPost(
     @Param('id') id: string,
     @Query() query: PaginationDto,
+    @Request() req,
   ) {
+    let userId: string | null = null;
+    if (req.headers.authorization) {
+      userId = await this.extractUserIdFromHeadersUseCase.execute(req);
+    }
     const post = await this.postsQueryRepository.getPostById(id);
     if (!post) throw new NotFoundException('Post not found');
-    return this.commentsQueryRepository.getCommentsForPost(id, query);
+    return this.commentsQueryRepository.getCommentsForPost(id, query, userId);
   }
 
   @Post(':id/comments')

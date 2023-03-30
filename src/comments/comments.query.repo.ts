@@ -7,23 +7,34 @@ import { Model } from 'mongoose';
 import { Comment, CommentDocument } from './comments.shema';
 import { mapCommentWithLikes } from '../helpers/map.comment.with.likes';
 import { PaginationDto } from '../types/dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Like, LikeDocument } from '../likes/likes.schema';
+import { LikesRepository } from '../likes/likes.repo';
 
 @Injectable()
 export class CommentsQueryRepository {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+    @InjectModel(Like.name) private likesModel: Model<LikeDocument>,
+    protected likesRepository: LikesRepository,
   ) {}
 
-  async getCommentById(id: string): Promise<CommentsForResponse | null> {
+  async getCommentById(
+    id: string,
+    userId: string | null,
+  ): Promise<CommentsForResponse | null> {
     const comment = await this.commentModel.findOne({ id: id });
-    if (!comment) return null;
-    return mapCommentWithLikes(comment);
+    if (!comment) throw new NotFoundException('Comment not found');
+    const likesCount = await this.likesRepository.likesCount(id);
+    const dislikeCount = await this.likesRepository.dislikeCount(id);
+    const myStatus = await this.likesRepository.getMyStatus(id, userId);
+    return mapCommentWithLikes(comment, likesCount, dislikeCount, myStatus);
   }
 
   async getCommentsForPost(
     id: string,
     query: PaginationDto,
+    userId: string | null,
   ): Promise<CommentsPaginationResponse> {
     const pageNumber: number = Number(query.pageNumber) || 1;
     const pageSize: number = Number(query.pageSize) || 10;
@@ -34,13 +45,16 @@ export class CommentsQueryRepository {
       .find({ postId: id })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .sort({ [sortBy]: sortDirection })
-      .lean();
+      .sort({ [sortBy]: sortDirection });
 
     const itemsWithLikes = await Promise.all(
       items.map(async (i) => {
-        const result: CommentsForResponse = await mapCommentWithLikes(i);
-        return result;
+        const likesCount = await this.likesRepository.likesCount(i.id);
+        const dislikeCount = await this.likesRepository.dislikeCount(i.id);
+        const myStatus = await this.likesRepository.getMyStatus(i.id, userId);
+        const mappedForResponse: CommentsForResponse =
+          await mapCommentWithLikes(i, likesCount, dislikeCount, myStatus);
+        return mappedForResponse;
       }),
     );
     return {
@@ -52,5 +66,9 @@ export class CommentsQueryRepository {
       totalCount: await this.commentModel.count({ postId: id }),
       items: itemsWithLikes,
     };
+  }
+
+  async findCommentById(id: string): Promise<CommentDocument> {
+    return this.commentModel.findOne({ id: id });
   }
 }

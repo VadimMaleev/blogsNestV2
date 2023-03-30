@@ -78,8 +78,15 @@ export type CommentsForResponse = {
   };
   createdAt: Date;
   likesInfo: {
-    likesCount: 0;
-    dislikesCount: 0;
-    myStatus: 'None';
+    likesCount: number;
+    dislikesCount: number;
+    myStatus: string;
   };
 };
+
+//Enums
+export enum LikesStatusEnum {
+  Like = 'Like',
+  Dislike = 'Dislike',
+  None = 'None',
+}

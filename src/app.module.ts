@@ -41,6 +41,9 @@ import { DevicesController } from './devices/devices.controller';
 import { DevicesService } from './devices/devices.service';
 import { JwtBlackList, JwtTokensSchema } from './application/jwt.schema';
 import { JwtRepository } from './application/jwt.repository';
+import { Like, LikesSchema } from './likes/likes.schema';
+import { LikesRepository } from './likes/likes.repo';
+import { ExtractUserIdFromHeadersUseCase } from './helpers/extract.userId.from.headers';
 
 @Module({
   imports: [
@@ -58,6 +61,7 @@ import { JwtRepository } from './application/jwt.repository';
       { name: RecoveryCode.name, schema: RecoveryCodeSchema },
       { name: Device.name, schema: DeviceSchema },
       { name: JwtBlackList.name, schema: JwtTokensSchema },
+      { name: Like.name, schema: LikesSchema },
     ]),
   ],
   controllers: [
@@ -92,6 +96,8 @@ import { JwtRepository } from './application/jwt.repository';
     DevicesRepository,
     DevicesQueryRepository,
     JwtRepository,
+    LikesRepository,
+    ExtractUserIdFromHeadersUseCase,
   ],
 })
 export class AppModule {}
