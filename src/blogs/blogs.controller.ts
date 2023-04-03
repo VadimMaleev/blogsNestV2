@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  Request,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { BlogsQueryRepository } from './blogs.query.repo';
@@ -19,6 +20,7 @@ import {
 import { BlogsQueryDto, PaginationDto } from '../types/dto';
 import { PostsService } from '../posts/posts.service';
 import { PostsQueryRepository } from '../posts/posts.query.repo';
+import { ExtractUserIdFromHeadersUseCase } from '../helpers/extract.userId.from.headers';
 
 @Controller('blogs')
 export class BlogsController {
@@ -27,6 +29,7 @@ export class BlogsController {
     protected blogsQueryRepository: BlogsQueryRepository,
     protected postsService: PostsService,
     protected postsQueryRepository: PostsQueryRepository,
+    protected extractUserIdFromHeadersUseCase: ExtractUserIdFromHeadersUseCase,
   ) {}
 
   @Get()
@@ -81,9 +84,14 @@ export class BlogsController {
   async getPostsForBlog(
     @Param('id') id: string,
     @Query() query: PaginationDto,
+    @Request() req,
   ) {
+    let userId: string | null = null;
+    if (req.headers.authorization) {
+      userId = await this.extractUserIdFromHeadersUseCase.execute(req);
+    }
     const blog = await this.blogsQueryRepository.getOneBlogById(id);
     if (!blog) throw new NotFoundException('Blog not found');
-    return this.postsQueryRepository.getPostsForBlog(blog, query);
+    return this.postsQueryRepository.getPostsForBlog(blog, query, userId);
   }
 }

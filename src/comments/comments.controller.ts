@@ -14,7 +14,10 @@ import {
 import { CommentsQueryRepository } from './comments.query.repo';
 import { JwtAuthGuard } from '../guards/jwt.auth.guard';
 import { CommentsService } from './comments.service';
-import { CommentCreateInputModel } from '../types/input.models';
+import {
+  CommentCreateInputModel,
+  LikeStatusInputModel,
+} from '../types/input.models';
 import { ExtractUserIdFromHeadersUseCase } from '../helpers/extract.userId.from.headers';
 
 @Controller('comments')
@@ -65,5 +68,24 @@ export class CommentsController {
       inputModel.content,
     );
     if (!isUpdated) throw new NotFoundException();
+  }
+
+  @Put('id/like-status')
+  @HttpCode(204)
+  @UseGuards(JwtAuthGuard)
+  async addLikeStatusForComment(
+    @Body() inputModel: LikeStatusInputModel,
+    @Param('id') id: string,
+    @Request() req,
+  ) {
+    const comment = await this.commentsQueryRepository.findCommentById(id);
+    if (!comment) throw new NotFoundException();
+    const userId: string | null =
+      await this.extractUserIdFromHeadersUseCase.execute(req);
+    await this.commentsService.makeLikeOrUnlike(
+      id,
+      userId,
+      inputModel.likeStatus,
+    );
   }
 }

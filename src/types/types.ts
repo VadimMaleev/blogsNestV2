@@ -44,10 +44,10 @@ export type PostsForResponse = {
   blogName: string;
   createdAt: Date;
   extendedLikesInfo: {
-    likesCount: 0;
-    dislikesCount: 0;
-    myStatus: 'None';
-    newestLikes: [];
+    likesCount: number;
+    dislikesCount: number;
+    myStatus: string;
+    newestLikes: NewestLikes[];
   };
 };
 
@@ -90,3 +90,9 @@ export enum LikesStatusEnum {
   Dislike = 'Dislike',
   None = 'None',
 }
+
+export type NewestLikes = {
+  addedAt: Date;
+  userId: string;
+  login: string;
+};

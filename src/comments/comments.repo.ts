@@ -4,11 +4,13 @@ import { Comment, CommentDocument } from './comments.shema';
 import { Model } from 'mongoose';
 import { CreateCommentDto } from '../types/dto';
 import { plugForCreatingComment } from '../helpers/plug.for.creating.posts.and.comments';
+import { Like, LikeDocument } from '../likes/likes.schema';
 
 @Injectable()
 export class CommentsRepository {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+    @InjectModel(Like.name) private likesModel: Model<LikeDocument>,
   ) {}
   async deleteComment(id: string): Promise<boolean> {
     const commentInstance = await this.commentModel.findOne({ id: id });

@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import {
   CommentCreateInputModel,
+  LikeStatusInputModel,
   PostCreateInputModelType,
 } from '../types/input.models';
 import { PostsService } from './posts.service';
@@ -44,15 +45,24 @@ export class PostsController {
   async getPostById(
     @Param('id')
     id: string,
+    @Request() req,
   ) {
-    const post = await this.postsQueryRepository.getPostById(id);
+    let userId: string | null = null;
+    if (req.headers.authorization) {
+      userId = await this.extractUserIdFromHeadersUseCase.execute(req);
+    }
+    const post = await this.postsQueryRepository.getPostById(id, userId);
     if (!post) throw new NotFoundException('Post not found');
     return post;
   }
 
   @Get()
-  async getPosts(@Query() query: PaginationDto) {
-    return this.postsQueryRepository.getPosts(query);
+  async getPosts(@Query() query: PaginationDto, @Request() req) {
+    let userId: string | null = null;
+    if (req.headers.authorization) {
+      userId = await this.extractUserIdFromHeadersUseCase.execute(req);
+    }
+    return this.postsQueryRepository.getPosts(query, userId);
   }
 
   @Delete(':id')
@@ -84,7 +94,7 @@ export class PostsController {
     if (req.headers.authorization) {
       userId = await this.extractUserIdFromHeadersUseCase.execute(req);
     }
-    const post = await this.postsQueryRepository.getPostById(id);
+    const post = await this.postsQueryRepository.findPostById(id);
     if (!post) throw new NotFoundException('Post not found');
     return this.commentsQueryRepository.getCommentsForPost(id, query, userId);
   }
@@ -96,7 +106,7 @@ export class PostsController {
     @Param('id') id: string,
     @Request() req,
   ) {
-    const post = await this.postsQueryRepository.getPostById(id);
+    const post = await this.postsQueryRepository.findPostById(id);
     if (!post) throw new NotFoundException();
     return await this.commentsService.createComment(
       id,
@@ -104,5 +114,20 @@ export class PostsController {
       req.user.id,
       req.user.login,
     );
+  }
+
+  @Put('id/like-status')
+  @HttpCode(204)
+  @UseGuards(JwtAuthGuard)
+  async addLikeStatusForPost(
+    @Body() inputModel: LikeStatusInputModel,
+    @Param('id') id: string,
+    @Request() req,
+  ) {
+    const post = await this.postsQueryRepository.findPostById(id);
+    if (!post) throw new NotFoundException();
+    const userId: string | null =
+      await this.extractUserIdFromHeadersUseCase.execute(req);
+    await this.postsService.makeLikeOrUnlike(id, userId, inputModel.likeStatus);
   }
 }

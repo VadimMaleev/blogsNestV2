@@ -6,12 +6,16 @@ import { v4 as uuidv4 } from 'uuid';
 import { PostsRepository } from './posts.repo';
 import { BlogsForResponse, PostsForResponse } from '../types/types';
 import { plugForCreatingPosts } from '../helpers/plug.for.creating.posts.and.comments';
+import { UsersQueryRepository } from '../users/users.query.repo';
+import { LikesRepository } from '../likes/likes.repo';
 
 @Injectable()
 export class PostsService {
   constructor(
     protected blogsQueryRepository: BlogsQueryRepository,
     protected postRepository: PostsRepository,
+    protected usersQueryRepository: UsersQueryRepository,
+    protected likesRepository: LikesRepository,
   ) {}
 
   async createPost(
@@ -64,5 +68,15 @@ export class PostsService {
 
   async updatePost(id: string, postInputModel: PostCreateInputModelType) {
     return this.postRepository.updatePost(id, postInputModel);
+  }
+
+  async makeLikeOrUnlike(id: string, userId: string, likeStatus: string) {
+    const user = await this.usersQueryRepository.findUserById(userId);
+    return this.likesRepository.makeLikeOrUnlike(
+      id,
+      userId,
+      user.login,
+      likeStatus,
+    );
   }
 }

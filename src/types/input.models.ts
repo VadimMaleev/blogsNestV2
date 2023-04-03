@@ -1,4 +1,5 @@
-import { Length, Matches } from 'class-validator';
+import { IsEnum, Length, Matches } from 'class-validator';
+import { LikesStatusEnum } from './types';
 
 export class BlogCreateInputModelType {
   @Length(3, 15)
@@ -59,4 +60,9 @@ export class NewPasswordInputModelType {
 export class CommentCreateInputModel {
   @Length(20, 300)
   content: string;
+}
+
+export class LikeStatusInputModel {
+  @IsEnum(LikesStatusEnum)
+  likeStatus: string;
 }

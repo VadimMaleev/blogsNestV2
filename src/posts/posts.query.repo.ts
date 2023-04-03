@@ -9,18 +9,38 @@ import { Post, PostDocument } from './posts.schema';
 import { Model } from 'mongoose';
 import { mapPostWithLikes } from '../helpers/map.post.with.likes';
 import { PaginationDto } from '../types/dto';
+import { LikesRepository } from '../likes/likes.repo';
 
 @Injectable()
 export class PostsQueryRepository {
-  constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) {}
+  constructor(
+    @InjectModel(Post.name) private postModel: Model<PostDocument>,
+    protected likesRepository: LikesRepository,
+  ) {}
 
-  async getPostById(id: string): Promise<PostsForResponse | null> {
+  async getPostById(
+    id: string,
+    userId: string | null,
+  ): Promise<PostsForResponse | null> {
     const post = await this.postModel.findOne({ id: id });
     if (!post) return null;
-    return mapPostWithLikes(post);
+    const likesCount = await this.likesRepository.likesCount(id);
+    const dislikeCount = await this.likesRepository.dislikeCount(id);
+    const myStatus = await this.likesRepository.getMyStatus(id, userId);
+    const newestLikes = await this.likesRepository.getNewestLikes(id);
+    return mapPostWithLikes(
+      post,
+      likesCount,
+      dislikeCount,
+      myStatus,
+      newestLikes,
+    );
   }
 
-  async getPosts(query: PaginationDto): Promise<PostsPaginationResponse> {
+  async getPosts(
+    query: PaginationDto,
+    userId: string | null,
+  ): Promise<PostsPaginationResponse> {
     const pageNumber: number = Number(query.pageNumber) || 1;
     const pageSize: number = Number(query.pageSize) || 10;
     const sortBy: string = query.sortBy || 'createdAt';
@@ -30,12 +50,22 @@ export class PostsQueryRepository {
       .find()
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .sort({ [sortBy]: sortDirection })
-      .lean();
+      .sort({ [sortBy]: sortDirection });
+
     const itemsWithLikes = await Promise.all(
       items.map(async (i) => {
-        const result: PostsForResponse = await mapPostWithLikes(i);
-        return result;
+        const likesCount = await this.likesRepository.likesCount(i.id);
+        const dislikeCount = await this.likesRepository.dislikeCount(i.id);
+        const myStatus = await this.likesRepository.getMyStatus(i.id, userId);
+        const newestLikes = await this.likesRepository.getNewestLikes(i.id);
+        const mappedForResponse: PostsForResponse = await mapPostWithLikes(
+          i,
+          likesCount,
+          dislikeCount,
+          myStatus,
+          newestLikes,
+        );
+        return mappedForResponse;
       }),
     );
     return {
@@ -50,6 +80,7 @@ export class PostsQueryRepository {
   async getPostsForBlog(
     blog: BlogsForResponse,
     query: PaginationDto,
+    userId: string | null,
   ): Promise<PostsPaginationResponse> {
     const pageNumber: number = Number(query.pageNumber) || 1;
     const pageSize: number = Number(query.pageSize) || 10;
@@ -60,12 +91,22 @@ export class PostsQueryRepository {
       .find({ blogId: blog.id })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .sort({ [sortBy]: sortDirection })
-      .lean();
+      .sort({ [sortBy]: sortDirection });
+
     const itemsWithLikes = await Promise.all(
       items.map(async (i) => {
-        const result: PostsForResponse = await mapPostWithLikes(i);
-        return result;
+        const likesCount = await this.likesRepository.likesCount(i.id);
+        const dislikeCount = await this.likesRepository.dislikeCount(i.id);
+        const myStatus = await this.likesRepository.getMyStatus(i.id, userId);
+        const newestLikes = await this.likesRepository.getNewestLikes(i.id);
+        const mappedForResponse: PostsForResponse = await mapPostWithLikes(
+          i,
+          likesCount,
+          dislikeCount,
+          myStatus,
+          newestLikes,
+        );
+        return mappedForResponse;
       }),
     );
     return {
@@ -77,5 +118,9 @@ export class PostsQueryRepository {
       totalCount: await this.postModel.count({ blogId: blog.id }),
       items: itemsWithLikes,
     };
+  }
+
+  async findPostById(id: string): Promise<PostDocument> {
+    return this.postModel.findOne({ id: id });
   }
 }

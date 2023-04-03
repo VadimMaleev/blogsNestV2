@@ -8,14 +8,12 @@ import { Comment, CommentDocument } from './comments.shema';
 import { mapCommentWithLikes } from '../helpers/map.comment.with.likes';
 import { PaginationDto } from '../types/dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Like, LikeDocument } from '../likes/likes.schema';
 import { LikesRepository } from '../likes/likes.repo';
 
 @Injectable()
 export class CommentsQueryRepository {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
-    @InjectModel(Like.name) private likesModel: Model<LikeDocument>,
     protected likesRepository: LikesRepository,
   ) {}
 
