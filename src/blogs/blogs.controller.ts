@@ -48,12 +48,14 @@ export class BlogsController {
 
   @Post()
   @HttpCode(201)
+  @UseGuards(BasicAuthGuard)
   async createBlog(@Body() blogInputModel: BlogCreateInputModelType) {
     return this.blogsService.createBlog(blogInputModel);
   }
 
   @Delete(':id')
   @HttpCode(204)
+  @UseGuards(BasicAuthGuard)
   async deleteBlog(@Param('id') id: string) {
     const isDeleted = await this.blogsService.deleteBlog(id);
     if (!isDeleted) throw new NotFoundException('Blog not found');
@@ -74,6 +76,7 @@ export class BlogsController {
 
   @Post(':id/posts')
   @HttpCode(201)
+  @UseGuards(BasicAuthGuard)
   async createPostForBlog(
     @Param('id') id: string,
     @Body() postInputModel: PostCreateInputModelType,
