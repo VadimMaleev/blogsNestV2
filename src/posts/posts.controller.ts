@@ -24,6 +24,7 @@ import { CommentsQueryRepository } from '../comments/comments.query.repo';
 import { JwtAuthGuard } from '../guards/jwt.auth.guard';
 import { CommentsService } from '../comments/comments.service';
 import { ExtractUserIdFromHeadersUseCase } from '../helpers/extract.userId.from.headers';
+import { BasicAuthGuard } from '../guards/basic.auth.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -37,6 +38,7 @@ export class PostsController {
 
   @Post()
   @HttpCode(201)
+  @UseGuards(BasicAuthGuard)
   async createPost(@Body() postInputModel: PostCreateInputModelType) {
     return this.postsService.createPost(postInputModel);
   }
@@ -67,6 +69,7 @@ export class PostsController {
 
   @Delete(':id')
   @HttpCode(204)
+  @UseGuards(BasicAuthGuard)
   async deletePost(@Param('id') id: string) {
     const isDeleted = await this.postsService.deletePost(id);
     if (!isDeleted) throw new NotFoundException('Post not found');
@@ -75,6 +78,7 @@ export class PostsController {
 
   @Put(':id')
   @HttpCode(204)
+  @UseGuards(BasicAuthGuard)
   async updatePost(
     @Param('id') id: string,
     @Body() postInputModel: PostCreateInputModelType,
