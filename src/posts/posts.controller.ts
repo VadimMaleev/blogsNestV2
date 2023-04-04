@@ -116,7 +116,7 @@ export class PostsController {
     );
   }
 
-  @Put('id/like-status')
+  @Put(':id/like-status')
   @HttpCode(204)
   @UseGuards(JwtAuthGuard)
   async addLikeStatusForPost(

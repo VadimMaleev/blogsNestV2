@@ -50,7 +50,7 @@ export class CommentsController {
     if (!isDeleted) throw new NotFoundException();
   }
 
-  @Put('id')
+  @Put(':id')
   @HttpCode(204)
   @UseGuards(JwtAuthGuard)
   async updateComment(
