@@ -10,6 +10,7 @@ import {
   Put,
   Query,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { BlogsQueryRepository } from './blogs.query.repo';
@@ -21,6 +22,7 @@ import { BlogsQueryDto, PaginationDto } from '../types/dto';
 import { PostsService } from '../posts/posts.service';
 import { PostsQueryRepository } from '../posts/posts.query.repo';
 import { ExtractUserIdFromHeadersUseCase } from '../helpers/extract.userId.from.headers';
+import { BasicAuthGuard } from '../guards/basic.auth.guard';
 
 @Controller('blogs')
 export class BlogsController {
@@ -60,6 +62,7 @@ export class BlogsController {
 
   @Put(':id')
   @HttpCode(204)
+  @UseGuards(BasicAuthGuard)
   async updateBlog(
     @Param('id') id: string,
     @Body() inputModel: BlogCreateInputModelType,
