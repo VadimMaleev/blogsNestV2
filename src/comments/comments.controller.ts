@@ -70,7 +70,7 @@ export class CommentsController {
     if (!isUpdated) throw new NotFoundException();
   }
 
-  @Put('id/like-status')
+  @Put(':id/like-status')
   @HttpCode(204)
   @UseGuards(JwtAuthGuard)
   async addLikeStatusForComment(
