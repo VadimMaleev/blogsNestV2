@@ -1,48 +1,46 @@
 import { IsEnum, Length, Matches } from 'class-validator';
 import { LikesStatusEnum } from './types';
-import { Transform } from 'class-transformer';
-import { trimHelper } from '../helpers/trim.helper';
+import { Transform, TransformFnParams } from 'class-transformer';
 
 export class BlogCreateInputModelType {
-  @Transform(trimHelper)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(3, 15)
   name: string;
 
-  @Transform(trimHelper)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(3, 500)
   description: string;
 
-  @Transform(trimHelper)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(3, 100)
   @Matches(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+$/)
   websiteUrl: string;
 }
 
 export class UserCreateInputModelType {
-  @Transform(trimHelper)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(3, 10)
   @Matches(/^[a-zA-Z\d_-]*$/)
   login: string;
 
-  @Transform(trimHelper)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(6, 20)
   password: string;
 
-  @Transform(trimHelper)
   @Matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)
   email: string;
 }
 
 export class PostCreateInputModelType {
-  @Transform(trimHelper)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(3, 30)
   title: string;
 
-  @Transform(trimHelper)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(3, 100)
   shortDescription: string;
 
-  @Transform(trimHelper)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(3, 1000)
   content: string;
 
@@ -50,22 +48,20 @@ export class PostCreateInputModelType {
 }
 
 export class EmailInputModelType {
-  @Transform(trimHelper)
   @Matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)
   email: string;
 }
 
 export class LoginInputModelType {
-  @Transform(trimHelper)
   loginOrEmail: string;
 
-  @Transform(trimHelper)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(6, 20)
   password: string;
 }
 
 export class NewPasswordInputModelType {
-  @Transform(trimHelper)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(6, 20)
   newPassword: string;
 
@@ -73,7 +69,7 @@ export class NewPasswordInputModelType {
 }
 
 export class CommentCreateInputModel {
-  @Transform(trimHelper)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(20, 300)
   content: string;
 }
