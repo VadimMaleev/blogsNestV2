@@ -3,7 +3,9 @@ import { Blog, BlogDocument } from './blogs.schema';
 import { Model } from 'mongoose';
 import { BlogsForResponse, BlogsPaginationResponse } from '../types/types';
 import { BlogsQueryDto } from '../types/dto';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class BlogsQueryRepository {
   constructor(@InjectModel(Blog.name) private blogModel: Model<BlogDocument>) {}
 

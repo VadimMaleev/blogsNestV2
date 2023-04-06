@@ -1,6 +1,7 @@
 import { IsEnum, Length, Matches } from 'class-validator';
 import { LikesStatusEnum } from './types';
 import { Transform, TransformFnParams } from 'class-transformer';
+import { BlogExists } from '../helpers/validator.blogId';
 
 export class BlogCreateInputModelType {
   @Transform(({ value }: TransformFnParams) => value?.trim())
@@ -44,6 +45,7 @@ export class PostCreateInputModelType {
   @Length(3, 1000)
   content: string;
 
+  @BlogExists()
   blogId: string;
 }
 

@@ -44,6 +44,7 @@ import { JwtRepository } from './application/jwt.repository';
 import { Like, LikesSchema } from './likes/likes.schema';
 import { LikesRepository } from './likes/likes.repo';
 import { ExtractUserIdFromHeadersUseCase } from './helpers/extract.userId.from.headers';
+import { BlogExistRule } from './helpers/validator.blogId';
 
 @Module({
   imports: [
@@ -98,6 +99,7 @@ import { ExtractUserIdFromHeadersUseCase } from './helpers/extract.userId.from.h
     JwtRepository,
     LikesRepository,
     ExtractUserIdFromHeadersUseCase,
+    BlogExistRule,
   ],
 })
 export class AppModule {}
