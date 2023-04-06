@@ -1,5 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { PostCreateInputModelType } from '../types/input.models';
+import { Injectable } from '@nestjs/common';
+import {
+  PostCreateFromBlogInputModelType,
+  PostCreateInputModelType,
+} from '../types/input.models';
 import { BlogsQueryRepository } from '../blogs/blogs.query.repo';
 import { CreatePostDto } from '../types/dto';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,13 +27,6 @@ export class PostsService {
     const blog = await this.blogsQueryRepository.getOneBlogById(
       postInputModel.blogId,
     );
-    if (!blog)
-      throw new BadRequestException([
-        {
-          message: 'bad blogId',
-          field: 'blogId',
-        },
-      ]);
 
     const newPost = new CreatePostDto(
       uuidv4(),
@@ -46,7 +42,7 @@ export class PostsService {
   }
 
   async createPostForBlog(
-    postInputModel: PostCreateInputModelType,
+    postInputModel: PostCreateFromBlogInputModelType,
     blog: BlogsForResponse,
   ) {
     const newPost = new CreatePostDto(

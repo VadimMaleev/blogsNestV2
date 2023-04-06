@@ -49,6 +49,20 @@ export class PostCreateInputModelType {
   blogId: string;
 }
 
+export class PostCreateFromBlogInputModelType {
+  @Transform(({ value }: TransformFnParams) => value?.trim())
+  @Length(3, 30)
+  title: string;
+
+  @Transform(({ value }: TransformFnParams) => value?.trim())
+  @Length(3, 100)
+  shortDescription: string;
+
+  @Transform(({ value }: TransformFnParams) => value?.trim())
+  @Length(3, 1000)
+  content: string;
+}
+
 export class EmailInputModelType {
   @Matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)
   email: string;
