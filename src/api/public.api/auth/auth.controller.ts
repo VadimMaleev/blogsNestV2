@@ -10,17 +10,17 @@ import {
   Request,
   Res,
 } from '@nestjs/common';
-import { UsersQueryRepository } from '../users/users.query.repo';
+import { UsersQueryRepository } from '../../../users/users.query.repo';
 import { AuthService } from './auth.service';
 import {
   EmailInputModelType,
   LoginInputModelType,
   NewPasswordInputModelType,
   UserCreateInputModelType,
-} from '../types/input.models';
-import { UsersService } from '../users/users.service';
-import { JwtAuthGuard } from '../guards/jwt.auth.guard';
-import { JwtRefreshAuthGuard } from '../guards/jwt.refresh.auth.guard';
+} from '../../../types/input.models';
+import { UsersService } from '../../../users/users.service';
+import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
+import { JwtRefreshAuthGuard } from '../../../guards/jwt.refresh.auth.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')

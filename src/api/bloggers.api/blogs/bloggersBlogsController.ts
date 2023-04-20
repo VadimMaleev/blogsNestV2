@@ -26,7 +26,7 @@ import { BlogsQueryDto, UriParamsForBloggersApi } from '../../../types/dto';
 import { BlogDocument } from '../../../repositories/blogs/blogs.schema';
 
 @Controller('blogger/blogs')
-export class BlogsController {
+export class BloggersBlogsController {
   constructor(
     protected blogsService: BlogsService,
     protected blogsQueryRepository: BlogsQueryRepository,

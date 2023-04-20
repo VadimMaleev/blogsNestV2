@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BlogsController } from './blogs/blogs.controller';
+import { PublicBlogsController } from './api/public.api/blogs/publicBlogsController';
 import { BlogsService } from './blogs/blogs.service';
 import { BlogsRepository } from './repositories/blogs/blogs.repo';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -12,7 +12,7 @@ import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { UsersRepository } from './users/users.repo';
 import { UsersQueryRepository } from './users/users.query.repo';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from './api/public.api/auth/auth.service';
 import { User, UserSchema } from './users/users.schema';
 import { Post, PostSchema } from './posts/posts.schema';
 import { PostsController } from './posts/posts.controller';
@@ -32,7 +32,7 @@ import {
 import { RecoveryCodeRepository } from './recovery.codes/recovery.code.repo';
 import { EmailAdapter } from './adapters/email-adapter';
 import { JWTService } from './application/jwt.service';
-import { AuthController } from './auth/auth.controller';
+import { AuthController } from './api/public.api/auth/auth.controller';
 import { DevicesRepository } from './devices/devices.repository';
 import { DevicesQueryRepository } from './devices/devices.query.repository';
 import { Device, DeviceSchema } from './devices/devices.schema';
@@ -67,7 +67,7 @@ import { BlogExistRule } from './helpers/validator.blogId';
   ],
   controllers: [
     AppController,
-    BlogsController,
+    PublicBlogsController,
     UsersController,
     PostsController,
     CommentsController,

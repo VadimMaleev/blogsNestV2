@@ -1,6 +1,6 @@
 import { UserCreateInputModelType } from '../types/input.models';
 import { v4 as uuidv4 } from 'uuid';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../api/public.api/auth/auth.service';
 import add from 'date-fns/add';
 import { UsersRepository } from './users.repo';
 import { CreateUserDto } from '../types/dto';
