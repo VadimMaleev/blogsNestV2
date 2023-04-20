@@ -3,13 +3,13 @@ import {
   BlogsForResponse,
   PostsForResponse,
   PostsPaginationResponse,
-} from '../types/types';
+} from '../../types/types';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from './posts.schema';
 import { Model } from 'mongoose';
-import { mapPostWithLikes } from '../helpers/map.post.with.likes';
-import { PaginationDto } from '../types/dto';
-import { LikesRepository } from '../likes/likes.repo';
+import { mapPostWithLikes } from '../../helpers/map.post.with.likes';
+import { PaginationDto } from '../../types/dto';
+import { LikesRepository } from '../../likes/likes.repo';
 
 @Injectable()
 export class PostsQueryRepository {

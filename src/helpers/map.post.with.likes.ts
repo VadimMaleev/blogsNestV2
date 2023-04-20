@@ -1,5 +1,5 @@
 import { NewestLikes, PostsForResponse } from '../types/types';
-import { PostDocument } from '../posts/posts.schema';
+import { PostDocument } from '../repositories/posts/posts.schema';
 
 export const mapPostWithLikes = async (
   post: PostDocument,

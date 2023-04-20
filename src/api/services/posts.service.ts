@@ -2,16 +2,16 @@ import { HttpException, Injectable } from '@nestjs/common';
 import {
   PostCreateFromBlogInputModelType,
   PostCreateInputModelType,
-} from '../types/input.models';
-import { BlogsQueryRepository } from '../repositories/blogs/blogs.query.repo';
-import { CreatePostDto, UriParamsForBloggersApi } from '../types/dto';
+} from '../../types/input.models';
+import { BlogsQueryRepository } from '../../repositories/blogs/blogs.query.repo';
+import { CreatePostDto, UriParamsForBloggersApi } from '../../types/dto';
 import { v4 as uuidv4 } from 'uuid';
-import { PostsRepository } from './posts.repo';
-import { PostsForResponse } from '../types/types';
-import { plugForCreatingPosts } from '../helpers/plug.for.creating.posts.and.comments';
-import { UsersQueryRepository } from '../users/users.query.repo';
-import { LikesRepository } from '../likes/likes.repo';
-import { BlogDocument } from '../repositories/blogs/blogs.schema';
+import { PostsRepository } from '../../repositories/posts/posts.repo';
+import { PostsForResponse } from '../../types/types';
+import { plugForCreatingPosts } from '../../helpers/plug.for.creating.posts.and.comments';
+import { UsersQueryRepository } from '../../users/users.query.repo';
+import { LikesRepository } from '../../likes/likes.repo';
+import { BlogDocument } from '../../repositories/blogs/blogs.schema';
 
 @Injectable()
 export class PostsService {

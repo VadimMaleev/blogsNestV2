@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpCode,
   NotFoundException,
@@ -15,19 +14,17 @@ import {
 import {
   CommentCreateInputModel,
   LikeStatusInputModel,
-  PostCreateInputModelType,
-} from '../types/input.models';
-import { PostsService } from './posts.service';
-import { PostsQueryRepository } from './posts.query.repo';
-import { PaginationDto } from '../types/dto';
-import { CommentsQueryRepository } from '../comments/comments.query.repo';
-import { JwtAuthGuard } from '../guards/jwt.auth.guard';
-import { CommentsService } from '../comments/comments.service';
-import { ExtractUserIdFromHeadersUseCase } from '../helpers/extract.userId.from.headers';
-import { BasicAuthGuard } from '../guards/basic.auth.guard';
+} from '../../../types/input.models';
+import { PostsService } from '../../services/posts.service';
+import { PostsQueryRepository } from '../../../repositories/posts/posts.query.repo';
+import { PaginationDto } from '../../../types/dto';
+import { CommentsQueryRepository } from '../../../comments/comments.query.repo';
+import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
+import { CommentsService } from '../../../comments/comments.service';
+import { ExtractUserIdFromHeadersUseCase } from '../../../helpers/extract.userId.from.headers';
 
 @Controller('posts')
-export class PostsController {
+export class PublicPostsController {
   constructor(
     protected postsService: PostsService,
     protected postsQueryRepository: PostsQueryRepository,
@@ -35,13 +32,6 @@ export class PostsController {
     protected commentsService: CommentsService,
     protected extractUserIdFromHeadersUseCase: ExtractUserIdFromHeadersUseCase,
   ) {}
-
-  @Post()
-  @HttpCode(201)
-  @UseGuards(BasicAuthGuard)
-  async createPost(@Body() postInputModel: PostCreateInputModelType) {
-    return this.postsService.createPost(postInputModel);
-  }
 
   @Get(':id')
   async getPostById(
@@ -65,15 +55,6 @@ export class PostsController {
       userId = await this.extractUserIdFromHeadersUseCase.execute(req);
     }
     return this.postsQueryRepository.getPosts(query, userId);
-  }
-
-  @Delete(':id')
-  @HttpCode(204)
-  @UseGuards(BasicAuthGuard)
-  async deletePost(@Param('id') id: string) {
-    const isDeleted = await this.postsService.deletePost(id);
-    if (!isDeleted) throw new NotFoundException('Post not found');
-    return isDeleted;
   }
 
   @Get(':id/comments')

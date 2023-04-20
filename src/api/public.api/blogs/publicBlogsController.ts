@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { BlogsQueryRepository } from '../../../repositories/blogs/blogs.query.repo';
 import { BlogsQueryDto, PaginationDto } from '../../../types/dto';
-import { PostsQueryRepository } from '../../../posts/posts.query.repo';
+import { PostsQueryRepository } from '../../../repositories/posts/posts.query.repo';
 import { ExtractUserIdFromHeadersUseCase } from '../../../helpers/extract.userId.from.headers';
 
 @Controller('blogs')

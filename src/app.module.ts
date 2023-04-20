@@ -14,17 +14,17 @@ import { UsersRepository } from './users/users.repo';
 import { UsersQueryRepository } from './users/users.query.repo';
 import { AuthService } from './api/public.api/auth/auth.service';
 import { User, UserSchema } from './users/users.schema';
-import { Post, PostSchema } from './posts/posts.schema';
-import { PostsController } from './posts/posts.controller';
-import { PostsService } from './posts/posts.service';
-import { PostsRepository } from './posts/posts.repo';
-import { PostsQueryRepository } from './posts/posts.query.repo';
+import { Post, PostSchema } from './repositories/posts/posts.schema';
+import { PublicPostsController } from './api/public.api/posts/publicPostsController';
+import { PostsService } from './api/services/posts.service';
+import { PostsRepository } from './repositories/posts/posts.repo';
+import { PostsQueryRepository } from './repositories/posts/posts.query.repo';
 import { Comment, CommentSchema } from './comments/comments.shema';
 import { CommentsController } from './comments/comments.controller';
 import { CommentsService } from './comments/comments.service';
 import { CommentsRepository } from './comments/comments.repo';
 import { CommentsQueryRepository } from './comments/comments.query.repo';
-import { TestingController } from './testing/testing.controller';
+import { TestingController } from './api/public.api/testing/testing.controller';
 import {
   RecoveryCode,
   RecoveryCodeSchema,
@@ -33,12 +33,12 @@ import { RecoveryCodeRepository } from './recovery.codes/recovery.code.repo';
 import { EmailAdapter } from './adapters/email-adapter';
 import { JWTService } from './application/jwt.service';
 import { AuthController } from './api/public.api/auth/auth.controller';
-import { DevicesRepository } from './devices/devices.repository';
-import { DevicesQueryRepository } from './devices/devices.query.repository';
-import { Device, DeviceSchema } from './devices/devices.schema';
+import { DevicesRepository } from './api/public.api/devices/devices.repository';
+import { DevicesQueryRepository } from './api/public.api/devices/devices.query.repository';
+import { Device, DeviceSchema } from './api/public.api/devices/devices.schema';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { DevicesController } from './devices/devices.controller';
-import { DevicesService } from './devices/devices.service';
+import { DevicesController } from './api/public.api/devices/devices.controller';
+import { DevicesService } from './api/public.api/devices/devices.service';
 import { JwtBlackList, JwtTokensSchema } from './application/jwt.schema';
 import { JwtRepository } from './application/jwt.repository';
 import { Like, LikesSchema } from './likes/likes.schema';
@@ -69,7 +69,7 @@ import { BlogExistRule } from './helpers/validator.blogId';
     AppController,
     PublicBlogsController,
     UsersController,
-    PostsController,
+    PublicPostsController,
     CommentsController,
     TestingController,
     AuthController,

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { BlogsRepository } from '../../../repositories/blogs/blogs.repo';
-import { BlogCreateInputModelType } from '../../../types/input.models';
-import { BlogsForResponse } from '../../../types/types';
-import { CreateBlogDto } from '../../../types/dto';
+import { BlogsRepository } from '../../repositories/blogs/blogs.repo';
+import { BlogCreateInputModelType } from '../../types/input.models';
+import { BlogsForResponse } from '../../types/types';
+import { CreateBlogDto } from '../../types/dto';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()

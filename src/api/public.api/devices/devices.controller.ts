@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { DevicesQueryRepository } from './devices.query.repository';
 import { DevicesService } from './devices.service';
-import { JwtRefreshAuthGuard } from '../guards/jwt.refresh.auth.guard';
+import { JwtRefreshAuthGuard } from '../../../guards/jwt.refresh.auth.guard';
 
 @Controller('security')
 export class DevicesController {

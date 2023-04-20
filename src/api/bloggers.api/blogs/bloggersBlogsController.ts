@@ -14,14 +14,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BlogsQueryRepository } from '../../../repositories/blogs/blogs.query.repo';
-import { PostsService } from '../../../posts/posts.service';
+import { PostsService } from '../../services/posts.service';
 import {
   BlogCreateInputModelType,
   PostCreateFromBlogInputModelType,
   PostCreateInputModelType,
 } from '../../../types/input.models';
 import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
-import { BlogsService } from './blogs.service';
+import { BlogsService } from '../../services/blogs.service';
 import { BlogsQueryDto, UriParamsForBloggersApi } from '../../../types/dto';
 import { BlogDocument } from '../../../repositories/blogs/blogs.schema';
 
