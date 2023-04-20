@@ -1,5 +1,5 @@
 import { CommentsForResponse } from '../types/types';
-import { CommentDocument } from '../comments/comments.shema';
+import { CommentDocument } from '../repositories/comments/comments.shema';
 
 export const mapCommentWithLikes = async (
   comment: CommentDocument,

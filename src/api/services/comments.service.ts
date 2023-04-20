@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CommentsRepository } from './comments.repo';
+import { CommentsRepository } from '../../repositories/comments/comments.repo';
 import { v4 as uuidv4 } from 'uuid';
-import { CreateCommentDto } from '../types/dto';
-import { CommentsForResponse } from '../types/types';
-import { UsersQueryRepository } from '../users/users.query.repo';
-import { LikesRepository } from '../likes/likes.repo';
+import { CreateCommentDto } from '../../types/dto';
+import { CommentsForResponse } from '../../types/types';
+import { UsersQueryRepository } from '../../users/users.query.repo';
+import { LikesRepository } from '../../repositories/likes/likes.repo';
 
 @Injectable()
 export class CommentsService {

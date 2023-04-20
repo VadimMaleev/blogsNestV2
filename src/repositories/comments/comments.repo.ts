@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './comments.shema';
 import { Model } from 'mongoose';
-import { CreateCommentDto } from '../types/dto';
-import { plugForCreatingComment } from '../helpers/plug.for.creating.posts.and.comments';
+import { CreateCommentDto } from '../../types/dto';
+import { plugForCreatingComment } from '../../helpers/plug.for.creating.posts.and.comments';
 import { Like, LikeDocument } from '../likes/likes.schema';
 
 @Injectable()

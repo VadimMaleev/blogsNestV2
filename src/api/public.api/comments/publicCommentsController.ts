@@ -11,17 +11,17 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { CommentsQueryRepository } from './comments.query.repo';
-import { JwtAuthGuard } from '../guards/jwt.auth.guard';
-import { CommentsService } from './comments.service';
+import { CommentsQueryRepository } from '../../../repositories/comments/comments.query.repo';
+import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
+import { CommentsService } from '../../services/comments.service';
 import {
   CommentCreateInputModel,
   LikeStatusInputModel,
-} from '../types/input.models';
-import { ExtractUserIdFromHeadersUseCase } from '../helpers/extract.userId.from.headers';
+} from '../../../types/input.models';
+import { ExtractUserIdFromHeadersUseCase } from '../../../helpers/extract.userId.from.headers';
 
 @Controller('comments')
-export class CommentsController {
+export class PublicCommentsController {
   constructor(
     protected commentsQueryRepository: CommentsQueryRepository,
     protected commentsService: CommentsService,

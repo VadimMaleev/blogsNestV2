@@ -18,9 +18,9 @@ import {
 import { PostsService } from '../../services/posts.service';
 import { PostsQueryRepository } from '../../../repositories/posts/posts.query.repo';
 import { PaginationDto } from '../../../types/dto';
-import { CommentsQueryRepository } from '../../../comments/comments.query.repo';
+import { CommentsQueryRepository } from '../../../repositories/comments/comments.query.repo';
 import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
-import { CommentsService } from '../../../comments/comments.service';
+import { CommentsService } from '../../services/comments.service';
 import { ExtractUserIdFromHeadersUseCase } from '../../../helpers/extract.userId.from.headers';
 
 @Controller('posts')

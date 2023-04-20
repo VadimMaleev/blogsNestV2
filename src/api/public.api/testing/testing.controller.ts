@@ -2,7 +2,10 @@ import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from '../../../repositories/posts/posts.schema';
 import { Model } from 'mongoose';
-import { Comment, CommentDocument } from '../../../comments/comments.shema';
+import {
+  Comment,
+  CommentDocument,
+} from '../../../repositories/comments/comments.shema';
 import { User, UserDocument } from '../../../users/users.schema';
 import { Blog, BlogDocument } from '../../../repositories/blogs/blogs.schema';
 

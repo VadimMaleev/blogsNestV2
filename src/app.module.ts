@@ -19,17 +19,17 @@ import { PublicPostsController } from './api/public.api/posts/publicPostsControl
 import { PostsService } from './api/services/posts.service';
 import { PostsRepository } from './repositories/posts/posts.repo';
 import { PostsQueryRepository } from './repositories/posts/posts.query.repo';
-import { Comment, CommentSchema } from './comments/comments.shema';
-import { CommentsController } from './comments/comments.controller';
-import { CommentsService } from './comments/comments.service';
-import { CommentsRepository } from './comments/comments.repo';
-import { CommentsQueryRepository } from './comments/comments.query.repo';
+import { Comment, CommentSchema } from './repositories/comments/comments.shema';
+import { PublicCommentsController } from './api/public.api/comments/publicCommentsController';
+import { CommentsService } from './api/services/comments.service';
+import { CommentsRepository } from './repositories/comments/comments.repo';
+import { CommentsQueryRepository } from './repositories/comments/comments.query.repo';
 import { TestingController } from './api/public.api/testing/testing.controller';
 import {
   RecoveryCode,
   RecoveryCodeSchema,
-} from './recovery.codes/recovery.code.schema';
-import { RecoveryCodeRepository } from './recovery.codes/recovery.code.repo';
+} from './repositories/recovery.codes/recovery.code.schema';
+import { RecoveryCodeRepository } from './repositories/recovery.codes/recovery.code.repo';
 import { EmailAdapter } from './adapters/email-adapter';
 import { JWTService } from './application/jwt.service';
 import { AuthController } from './api/public.api/auth/auth.controller';
@@ -41,8 +41,8 @@ import { DevicesController } from './api/public.api/devices/devices.controller';
 import { DevicesService } from './api/public.api/devices/devices.service';
 import { JwtBlackList, JwtTokensSchema } from './application/jwt.schema';
 import { JwtRepository } from './application/jwt.repository';
-import { Like, LikesSchema } from './likes/likes.schema';
-import { LikesRepository } from './likes/likes.repo';
+import { Like, LikesSchema } from './repositories/likes/likes.schema';
+import { LikesRepository } from './repositories/likes/likes.repo';
 import { ExtractUserIdFromHeadersUseCase } from './helpers/extract.userId.from.headers';
 import { BlogExistRule } from './helpers/validator.blogId';
 
@@ -70,7 +70,7 @@ import { BlogExistRule } from './helpers/validator.blogId';
     PublicBlogsController,
     UsersController,
     PublicPostsController,
-    CommentsController,
+    PublicCommentsController,
     TestingController,
     AuthController,
     DevicesController,

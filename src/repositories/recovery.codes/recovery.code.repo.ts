@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { RecoveryCode, RecoveryCodeDocument } from './recovery.code.schema';
 import { Model } from 'mongoose';
-import { RecoveryCodeDto } from '../types/dto';
+import { RecoveryCodeDto } from '../../types/dto';
 
 @Injectable()
 export class RecoveryCodeRepository {

@@ -14,7 +14,7 @@ import add from 'date-fns/add';
 import { UsersRepository } from '../../../users/users.repo';
 import { EmailAdapter } from '../../../adapters/email-adapter';
 import { UsersQueryRepository } from '../../../users/users.query.repo';
-import { RecoveryCodeRepository } from '../../../recovery.codes/recovery.code.repo';
+import { RecoveryCodeRepository } from '../../../repositories/recovery.codes/recovery.code.repo';
 import { UserDocument } from '../../../users/users.schema';
 import { JWTService } from '../../../application/jwt.service';
 import { randomUUID } from 'crypto';

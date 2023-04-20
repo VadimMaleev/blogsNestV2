@@ -9,7 +9,7 @@ import { Post, PostDocument } from './posts.schema';
 import { Model } from 'mongoose';
 import { mapPostWithLikes } from '../../helpers/map.post.with.likes';
 import { PaginationDto } from '../../types/dto';
-import { LikesRepository } from '../../likes/likes.repo';
+import { LikesRepository } from '../likes/likes.repo';
 
 @Injectable()
 export class PostsQueryRepository {

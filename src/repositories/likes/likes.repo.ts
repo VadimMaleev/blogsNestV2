@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Like, LikeDocument } from './likes.schema';
 import { Model } from 'mongoose';
-import { LikesStatusEnum, NewestLikes } from '../types/types';
+import { LikesStatusEnum, NewestLikes } from '../../types/types';
 import { v4 as uuidv4 } from 'uuid';
 
 export class LikesRepository {

@@ -10,7 +10,7 @@ import { PostsRepository } from '../../repositories/posts/posts.repo';
 import { PostsForResponse } from '../../types/types';
 import { plugForCreatingPosts } from '../../helpers/plug.for.creating.posts.and.comments';
 import { UsersQueryRepository } from '../../users/users.query.repo';
-import { LikesRepository } from '../../likes/likes.repo';
+import { LikesRepository } from '../../repositories/likes/likes.repo';
 import { BlogDocument } from '../../repositories/blogs/blogs.schema';
 
 @Injectable()
