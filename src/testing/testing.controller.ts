@@ -4,7 +4,7 @@ import { Post, PostDocument } from '../posts/posts.schema';
 import { Model } from 'mongoose';
 import { Comment, CommentDocument } from '../comments/comments.shema';
 import { User, UserDocument } from '../users/users.schema';
-import { Blog, BlogDocument } from '../blogs/blogs.schema';
+import { Blog, BlogDocument } from '../repositories/blogs/blogs.schema';
 
 @Controller('testing')
 export class TestingController {

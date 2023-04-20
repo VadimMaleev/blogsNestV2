@@ -5,7 +5,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { BlogsQueryRepository } from '../blogs/blogs.query.repo';
+import { BlogsQueryRepository } from '../repositories/blogs/blogs.query.repo';
 
 export function BlogExists(validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {

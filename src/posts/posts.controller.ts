@@ -76,18 +76,6 @@ export class PostsController {
     return isDeleted;
   }
 
-  @Put(':id')
-  @HttpCode(204)
-  @UseGuards(BasicAuthGuard)
-  async updatePost(
-    @Param('id') id: string,
-    @Body() postInputModel: PostCreateInputModelType,
-  ) {
-    const isUpdated = await this.postsService.updatePost(id, postInputModel);
-    if (!isUpdated) throw new NotFoundException('Post not found');
-    return isUpdated;
-  }
-
   @Get(':id/comments')
   async getCommentsForPost(
     @Param('id') id: string,

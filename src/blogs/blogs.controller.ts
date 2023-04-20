@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
-import { BlogsQueryRepository } from './blogs.query.repo';
+import { BlogsQueryRepository } from '../repositories/blogs/blogs.query.repo';
 import {
   BlogCreateInputModelType,
   PostCreateFromBlogInputModelType,
@@ -34,10 +34,10 @@ export class BlogsController {
     protected extractUserIdFromHeadersUseCase: ExtractUserIdFromHeadersUseCase,
   ) {}
 
-  @Get()
-  async getBlogs(@Query() query: BlogsQueryDto) {
-    return this.blogsQueryRepository.getBlogs(query);
-  }
+  // @Get()
+  // async getBlogs(@Query() query: BlogsQueryDto) {
+  //   return this.blogsQueryRepository.getBlogs(query);
+  // }
 
   @Get(':id')
   async getBlogById(@Param('id') id: string) {
@@ -46,33 +46,14 @@ export class BlogsController {
     return blog;
   }
 
-  @Post()
-  @HttpCode(201)
-  @UseGuards(BasicAuthGuard)
-  async createBlog(@Body() blogInputModel: BlogCreateInputModelType) {
-    return this.blogsService.createBlog(blogInputModel);
-  }
-
-  @Delete(':id')
-  @HttpCode(204)
-  @UseGuards(BasicAuthGuard)
-  async deleteBlog(@Param('id') id: string) {
-    const isDeleted = await this.blogsService.deleteBlog(id);
-    if (!isDeleted) throw new NotFoundException('Blog not found');
-    return isDeleted;
-  }
-
-  @Put(':id')
-  @HttpCode(204)
-  @UseGuards(BasicAuthGuard)
-  async updateBlog(
-    @Param('id') id: string,
-    @Body() inputModel: BlogCreateInputModelType,
-  ) {
-    const isUpdated = await this.blogsService.updateBlog(id, inputModel);
-    if (!isUpdated) throw new NotFoundException('Blog not found');
-    return isUpdated;
-  }
+  // @Delete(':id')
+  // @HttpCode(204)
+  // @UseGuards(BasicAuthGuard)
+  // async deleteBlog(@Param('id') id: string) {
+  //   const isDeleted = await this.blogsService.deleteBlog(id);
+  //   if (!isDeleted) throw new NotFoundException('Blog not found');
+  //   return isDeleted;
+  // }
 
   @Post(':id/posts')
   @HttpCode(201)

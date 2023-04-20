@@ -1,0 +1,125 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpException,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import { BlogsQueryRepository } from '../../../repositories/blogs/blogs.query.repo';
+import { PostsService } from '../../../posts/posts.service';
+import {
+  BlogCreateInputModelType,
+  PostCreateFromBlogInputModelType,
+  PostCreateInputModelType,
+} from '../../../types/input.models';
+import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
+import { BlogsService } from './blogs.service';
+import { BlogsQueryDto, UriParamsForBloggersApi } from '../../../types/dto';
+import { BlogDocument } from '../../../repositories/blogs/blogs.schema';
+
+@Controller('blogger/blogs')
+export class BlogsController {
+  constructor(
+    protected blogsService: BlogsService,
+    protected blogsQueryRepository: BlogsQueryRepository,
+    protected postsService: PostsService,
+  ) {}
+
+  @Post()
+  @HttpCode(201)
+  @UseGuards(JwtAuthGuard)
+  async createBlog(
+    @Body() blogInputModel: BlogCreateInputModelType,
+    @Request() req,
+  ) {
+    return this.blogsService.createBlog(
+      blogInputModel,
+      req.user.id,
+      req.user.login,
+    );
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async getBlogsForUser(@Query() query: BlogsQueryDto, @Request() req) {
+    return this.blogsQueryRepository.getBlogsForUser(query, req.user.id);
+  }
+
+  @Put(':id')
+  @HttpCode(204)
+  @UseGuards(JwtAuthGuard)
+  async updateBlog(
+    @Param('id') id: string,
+    @Body() inputModel: BlogCreateInputModelType,
+    @Request() req,
+  ) {
+    const isUpdated = await this.blogsService.updateBlog(
+      id,
+      inputModel,
+      req.user.id,
+    );
+    if (!isUpdated) throw new NotFoundException('Blog not found');
+    return isUpdated;
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  @UseGuards(JwtAuthGuard)
+  async deleteBlog(@Param('id') id: string, @Request() req) {
+    const isDeleted = await this.blogsService.deleteBlog(id, req.user.id);
+    if (!isDeleted) throw new NotFoundException('Blog not found');
+    return isDeleted;
+  }
+
+  @Post(':id/posts')
+  @HttpCode(201)
+  @UseGuards(JwtAuthGuard)
+  async createPostForBlog(
+    @Param('id') id: string,
+    @Body() postInputModel: PostCreateFromBlogInputModelType,
+    @Request() req,
+  ) {
+    const blog: BlogDocument = await this.blogsQueryRepository.getOneBlogById(
+      id,
+    );
+    if (!blog) throw new NotFoundException('Blog not found');
+    if (blog.userId !== req.user.id)
+      throw new HttpException('Not your own', 403);
+    return this.postsService.createPostForBlog(postInputModel, blog);
+  }
+
+  @Put(':blogId/posts/:postId')
+  @HttpCode(204)
+  @UseGuards(JwtAuthGuard)
+  async updatePost(
+    @Param() params: UriParamsForBloggersApi,
+    @Body() postInputModel: PostCreateInputModelType,
+    @Request() req,
+  ) {
+    const isUpdated = await this.postsService.updatePost(
+      params.postId,
+      postInputModel,
+      params.blogId,
+      req.user.id,
+    );
+    if (!isUpdated) throw new NotFoundException('Post not found');
+    return isUpdated;
+  }
+
+  @Delete(':blogId/posts/:postId')
+  @HttpCode(204)
+  @UseGuards(JwtAuthGuard)
+  async deletePost(@Param() params: UriParamsForBloggersApi, @Request() req) {
+    const isDeleted = await this.postsService.deletePost(params, req.user.id);
+    if (!isDeleted) throw new NotFoundException('Post not found');
+    return isDeleted;
+  }
+}

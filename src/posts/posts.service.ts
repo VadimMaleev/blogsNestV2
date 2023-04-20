@@ -1,16 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import {
   PostCreateFromBlogInputModelType,
   PostCreateInputModelType,
 } from '../types/input.models';
-import { BlogsQueryRepository } from '../blogs/blogs.query.repo';
-import { CreatePostDto } from '../types/dto';
+import { BlogsQueryRepository } from '../repositories/blogs/blogs.query.repo';
+import { CreatePostDto, UriParamsForBloggersApi } from '../types/dto';
 import { v4 as uuidv4 } from 'uuid';
 import { PostsRepository } from './posts.repo';
-import { BlogsForResponse, PostsForResponse } from '../types/types';
+import { PostsForResponse } from '../types/types';
 import { plugForCreatingPosts } from '../helpers/plug.for.creating.posts.and.comments';
 import { UsersQueryRepository } from '../users/users.query.repo';
 import { LikesRepository } from '../likes/likes.repo';
+import { BlogDocument } from '../repositories/blogs/blogs.schema';
 
 @Injectable()
 export class PostsService {
@@ -43,7 +44,7 @@ export class PostsService {
 
   async createPostForBlog(
     postInputModel: PostCreateFromBlogInputModelType,
-    blog: BlogsForResponse,
+    blog: BlogDocument,
   ) {
     const newPost = new CreatePostDto(
       uuidv4(),
@@ -58,12 +59,25 @@ export class PostsService {
     return plugForCreatingPosts(newPost);
   }
 
-  async deletePost(id: string) {
-    return this.postRepository.deletePost(id);
+  async deletePost(params: UriParamsForBloggersApi, userId: string) {
+    const blogForPost: BlogDocument =
+      await this.blogsQueryRepository.getOneBlogById(params.blogId);
+    if (blogForPost.userId !== userId)
+      throw new HttpException('Not your own', 403);
+    return this.postRepository.deletePost(params.postId);
   }
 
-  async updatePost(id: string, postInputModel: PostCreateInputModelType) {
-    return this.postRepository.updatePost(id, postInputModel);
+  async updatePost(
+    postId: string,
+    postInputModel: PostCreateInputModelType,
+    blogId: string,
+    userId: string,
+  ) {
+    const blogForPost: BlogDocument =
+      await this.blogsQueryRepository.getOneBlogById(blogId);
+    if (blogForPost.userId !== userId)
+      throw new HttpException('Not your own', 403);
+    return this.postRepository.updatePost(postId, postInputModel);
   }
 
   async makeLikeOrUnlike(id: string, userId: string, likeStatus: string) {

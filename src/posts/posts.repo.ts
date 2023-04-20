@@ -21,10 +21,12 @@ export class PostsRepository {
   }
 
   async updatePost(
-    id: string,
+    postId: string,
     postInputModel: PostCreateInputModelType,
   ): Promise<boolean> {
-    const postInstance: PostDocument = await this.postModel.findOne({ id: id });
+    const postInstance: PostDocument = await this.postModel.findOne({
+      id: postId,
+    });
     if (!postInstance) return false;
     postInstance.updatePost(postInputModel);
 

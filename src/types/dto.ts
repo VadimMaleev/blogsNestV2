@@ -15,6 +15,12 @@ export class UsersQueryDto extends PaginationDto {
   searchEmailTerm: string;
 }
 
+//DeleteParams
+export class UriParamsForBloggersApi {
+  blogId: string;
+  postId: string;
+}
+
 //Create
 export class CreateBlogDto {
   constructor(
@@ -24,6 +30,8 @@ export class CreateBlogDto {
     public websiteUrl: string,
     public createdAt: Date,
     public isMembership: boolean,
+    public userId: string,
+    public login: string,
   ) {}
 }
 
