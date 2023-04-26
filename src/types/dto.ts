@@ -13,6 +13,7 @@ export class BlogsQueryDto extends PaginationDto {
 export class UsersQueryDto extends PaginationDto {
   searchLoginTerm: string;
   searchEmailTerm: string;
+  banStatus: string;
 }
 
 //DeleteParams
@@ -45,6 +46,9 @@ export class CreateUserDto {
     public confirmationCode: string,
     public codeExpirationDate: Date,
     public isConfirmed: boolean,
+    public isBanned: boolean,
+    public banDate: Date | null,
+    public banReason: string,
   ) {}
 }
 

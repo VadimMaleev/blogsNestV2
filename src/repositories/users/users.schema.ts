@@ -29,6 +29,15 @@ export class User {
   @Prop({ required: true })
   isConfirmed: boolean;
 
+  @Prop({ required: true })
+  isBanned: boolean;
+
+  @Prop({ required: true })
+  banDate: Date | null;
+
+  @Prop({ required: true })
+  banReason: string;
+
   updateConfirmationCode(code: string, date: Date) {
     this.confirmationCode = code;
     this.codeExpirationDate = date;

@@ -10,15 +10,15 @@ import {
   Request,
   Res,
 } from '@nestjs/common';
-import { UsersQueryRepository } from '../../../users/users.query.repo';
-import { AuthService } from './auth.service';
+import { UsersQueryRepository } from '../../../repositories/users/users.query.repo';
+import { AuthService } from '../../services/auth.service';
 import {
   EmailInputModelType,
   LoginInputModelType,
   NewPasswordInputModelType,
   UserCreateInputModelType,
 } from '../../../types/input.models';
-import { UsersService } from '../../../users/users.service';
+import { UsersService } from '../../services/users.service';
 import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
 import { JwtRefreshAuthGuard } from '../../../guards/jwt.refresh.auth.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';

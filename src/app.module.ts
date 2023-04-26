@@ -8,12 +8,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { Blog, BlogSchema } from './repositories/blogs/blogs.schema';
 import { BlogsQueryRepository } from './repositories/blogs/blogs.query.repo';
-import { UsersController } from './users/users.controller';
-import { UsersService } from './users/users.service';
-import { UsersRepository } from './users/users.repo';
-import { UsersQueryRepository } from './users/users.query.repo';
-import { AuthService } from './api/public.api/auth/auth.service';
-import { User, UserSchema } from './users/users.schema';
+import { UsersSAController } from './api/sa.api/users/usersSAController';
+import { UsersService } from './api/services/users.service';
+import { UsersRepository } from './repositories/users/users.repo';
+import { UsersQueryRepository } from './repositories/users/users.query.repo';
+import { AuthService } from './api/services/auth.service';
+import { User, UserSchema } from './repositories/users/users.schema';
 import { Post, PostSchema } from './repositories/posts/posts.schema';
 import { PublicPostsController } from './api/public.api/posts/publicPostsController';
 import { PostsService } from './api/services/posts.service';
@@ -68,7 +68,7 @@ import { BlogExistRule } from './helpers/validator.blogId';
   controllers: [
     AppController,
     PublicBlogsController,
-    UsersController,
+    UsersSAController,
     PublicPostsController,
     PublicCommentsController,
     TestingController,

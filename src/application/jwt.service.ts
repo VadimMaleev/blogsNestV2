@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserDocument } from '../users/users.schema';
+import { UserDocument } from '../repositories/users/users.schema';
 import jwt from 'jsonwebtoken';
 import { settings } from '../settings/settings';
 

@@ -6,7 +6,7 @@ import {
   Comment,
   CommentDocument,
 } from '../../../repositories/comments/comments.shema';
-import { User, UserDocument } from '../../../users/users.schema';
+import { User, UserDocument } from '../../../repositories/users/users.schema';
 import { Blog, BlogDocument } from '../../../repositories/blogs/blogs.schema';
 
 @Controller('testing')

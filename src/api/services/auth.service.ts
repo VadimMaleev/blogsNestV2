@@ -3,24 +3,24 @@ import { Injectable } from '@nestjs/common';
 import {
   NewPasswordInputModelType,
   UserCreateInputModelType,
-} from '../../../types/input.models';
+} from '../../types/input.models';
 import {
   CreateDeviceDto,
   CreateUserDto,
   RecoveryCodeDto,
-} from '../../../types/dto';
+} from '../../types/dto';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
-import { UsersRepository } from '../../../users/users.repo';
-import { EmailAdapter } from '../../../adapters/email-adapter';
-import { UsersQueryRepository } from '../../../users/users.query.repo';
-import { RecoveryCodeRepository } from '../../../repositories/recovery.codes/recovery.code.repo';
-import { UserDocument } from '../../../users/users.schema';
-import { JWTService } from '../../../application/jwt.service';
+import { UsersRepository } from '../../repositories/users/users.repo';
+import { EmailAdapter } from '../../adapters/email-adapter';
+import { UsersQueryRepository } from '../../repositories/users/users.query.repo';
+import { RecoveryCodeRepository } from '../../repositories/recovery.codes/recovery.code.repo';
+import { UserDocument } from '../../repositories/users/users.schema';
+import { JWTService } from '../../application/jwt.service';
 import { randomUUID } from 'crypto';
-import { DevicesRepository } from '../devices/devices.repository';
-import { DevicesQueryRepository } from '../devices/devices.query.repository';
-import { JwtRepository } from '../../../application/jwt.repository';
+import { DevicesRepository } from '../public.api/devices/devices.repository';
+import { DevicesQueryRepository } from '../public.api/devices/devices.query.repository';
+import { JwtRepository } from '../../application/jwt.repository';
 
 @Injectable()
 export class AuthService {
@@ -50,6 +50,9 @@ export class AuthService {
       uuidv4(),
       add(new Date(), { hours: 3 }),
       false,
+      false,
+      null,
+      'notBanned',
     );
     await this.usersRepository.createUser(newUser);
     await this.emailAdapter.sendEmailConfirmationCode(
@@ -62,6 +65,11 @@ export class AuthService {
       login: newUser.login,
       email: newUser.email,
       createdAt: newUser.createdAt,
+      banInfo: {
+        isBanned: newUser.isBanned,
+        banDate: newUser.banDate,
+        banReason: newUser.banReason,
+      },
     };
   }
 

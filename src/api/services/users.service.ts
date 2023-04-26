@@ -1,13 +1,13 @@
-import { UserCreateInputModelType } from '../types/input.models';
+import { UserCreateInputModelType } from '../../types/input.models';
 import { v4 as uuidv4 } from 'uuid';
-import { AuthService } from '../api/public.api/auth/auth.service';
+import { AuthService } from './auth.service';
 import add from 'date-fns/add';
-import { UsersRepository } from './users.repo';
-import { CreateUserDto } from '../types/dto';
+import { UsersRepository } from '../../repositories/users/users.repo';
+import { CreateUserDto } from '../../types/dto';
 import { Injectable } from '@nestjs/common';
-import { UsersForResponse } from '../types/types';
-import { UsersQueryRepository } from './users.query.repo';
-import { EmailAdapter } from '../adapters/email-adapter';
+import { UsersForResponse } from '../../types/types';
+import { UsersQueryRepository } from '../../repositories/users/users.query.repo';
+import { EmailAdapter } from '../../adapters/email-adapter';
 
 @Injectable()
 export class UsersService {
@@ -29,6 +29,9 @@ export class UsersService {
       uuidv4(),
       add(new Date(), { hours: 3 }),
       true,
+      false,
+      null,
+      'notBanned',
     );
     await this.usersRepository.createUser(newUser);
 
@@ -37,6 +40,11 @@ export class UsersService {
       login: newUser.login,
       email: newUser.email,
       createdAt: newUser.createdAt,
+      banInfo: {
+        isBanned: newUser.isBanned,
+        banDate: newUser.banDate,
+        banReason: newUser.banReason,
+      },
     };
   }
 
@@ -63,5 +71,9 @@ export class UsersService {
       expirationDate,
     );
     await this.emailAdapter.sendEmailConfirmationCode(confirmCode, email);
+  }
+
+  async banOrUnbanUser(id: string) {
+    return true;
   }
 }

@@ -23,6 +23,11 @@ export type UsersForResponse = {
   login: string;
   email: string;
   createdAt: Date;
+  banInfo: {
+    isBanned: boolean;
+    banDate: Date | null;
+    banReason: string;
+  };
 };
 
 export type UsersPaginationResponse = {

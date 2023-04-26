@@ -7,17 +7,18 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { UserCreateInputModelType } from '../types/input.models';
-import { UsersService } from './users.service';
-import { UsersQueryDto } from '../types/dto';
-import { UsersQueryRepository } from './users.query.repo';
-import { BasicAuthGuard } from '../guards/basic.auth.guard';
+import { UserCreateInputModelType } from '../../../types/input.models';
+import { UsersService } from '../../services/users.service';
+import { UsersQueryDto } from '../../../types/dto';
+import { UsersQueryRepository } from '../../../repositories/users/users.query.repo';
+import { BasicAuthGuard } from '../../../guards/basic.auth.guard';
 
-@Controller('users')
-export class UsersController {
+@Controller('sa/users')
+export class UsersSAController {
   constructor(
     protected usersService: UsersService,
     protected usersQueryRepository: UsersQueryRepository,
@@ -43,5 +44,13 @@ export class UsersController {
     const isDeleted = await this.usersService.deleteUser(id);
     if (!isDeleted) throw new NotFoundException('User not found');
     return isDeleted;
+  }
+
+  @Put(':id/ban')
+  @UseGuards(BasicAuthGuard)
+  @HttpCode(204)
+  async banOrUnbanUser(@Param('id') id: string) {
+    const isBanned = await this.usersService.banOrUnbanUser(id);
+    return isBanned;
   }
 }

@@ -1,4 +1,4 @@
-import { IsEnum, Length, Matches } from 'class-validator';
+import { IsBoolean, IsEnum, Length, Matches } from 'class-validator';
 import { LikesStatusEnum } from './types';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { BlogExists } from '../helpers/validator.blogId';
@@ -33,7 +33,7 @@ export class UserCreateInputModelType {
   email: string;
 }
 
-//Проверить работает ли
+//TODO Проверить работает ли
 export class PostCreateInputModelType {
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(3, 30)
@@ -85,4 +85,12 @@ export class CommentCreateInputModel {
 export class LikeStatusInputModel {
   @IsEnum(LikesStatusEnum)
   likeStatus: string;
+}
+
+export class BanUserInputModel {
+  @IsBoolean()
+  isBanned: boolean;
+
+  @Length(20)
+  banReason: string;
 }

@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PostsRepository } from '../../repositories/posts/posts.repo';
 import { PostsForResponse } from '../../types/types';
 import { plugForCreatingPosts } from '../../helpers/plug.for.creating.posts.and.comments';
-import { UsersQueryRepository } from '../../users/users.query.repo';
+import { UsersQueryRepository } from '../../repositories/users/users.query.repo';
 import { LikesRepository } from '../../repositories/likes/likes.repo';
 import { BlogDocument } from '../../repositories/blogs/blogs.schema';
 
