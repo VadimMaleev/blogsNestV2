@@ -4,10 +4,15 @@ import { AuthService } from './auth.service';
 import add from 'date-fns/add';
 import { UsersRepository } from '../../repositories/users/users.repo';
 import { CreateUserDto } from '../../types/dto';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersForResponse } from '../../types/types';
 import { UsersQueryRepository } from '../../repositories/users/users.query.repo';
 import { EmailAdapter } from '../../adapters/email-adapter';
+import { UserDocument } from '../../repositories/users/users.schema';
+import { DevicesRepository } from '../public.api/devices/devices.repository';
+import { PostsRepository } from '../../repositories/posts/posts.repo';
+import { CommentsRepository } from '../../repositories/comments/comments.repo';
+import { LikesRepository } from '../../repositories/likes/likes.repo';
 
 @Injectable()
 export class UsersService {
@@ -16,6 +21,10 @@ export class UsersService {
     protected usersRepository: UsersRepository,
     protected usersQueryRepository: UsersQueryRepository,
     protected emailAdapter: EmailAdapter,
+    protected devicesRepository: DevicesRepository,
+    protected postsRepository: PostsRepository,
+    protected commentsRepository: CommentsRepository,
+    protected likesRepository: LikesRepository,
   ) {}
 
   async createUser(user: UserCreateInputModelType): Promise<UsersForResponse> {
@@ -73,7 +82,18 @@ export class UsersService {
     await this.emailAdapter.sendEmailConfirmationCode(confirmCode, email);
   }
 
-  async banOrUnbanUser(id: string) {
-    return true;
+  async banOrUnbanUser(id: string, banStatus: boolean, banReason: string) {
+    const user: UserDocument = await this.usersQueryRepository.findUserById(id);
+    if (!user) throw new BadRequestException();
+
+    await this.usersRepository.updateBanStatus(user, banStatus, banReason);
+
+    if (banStatus === true) {
+      await this.devicesRepository.deleteDevicesForBannedUser(id);
+    }
+
+    await this.postsRepository.updateVisibleStatus(id, banStatus);
+    await this.commentsRepository.updateVisibleStatus(id, banStatus);
+    await this.likesRepository.updateVisibleStatus(id, banStatus);
   }
 }

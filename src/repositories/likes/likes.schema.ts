@@ -22,6 +22,9 @@ export class Like {
 
   @Prop({ required: true })
   status: string;
+
+  @Prop({ required: true })
+  isVisible: boolean;
 }
 
 export const LikesSchema = SchemaFactory.createForClass(Like);

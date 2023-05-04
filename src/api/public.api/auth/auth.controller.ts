@@ -109,6 +109,7 @@ export class AuthController {
       inputModel.password,
     );
     if (!user) throw new UnauthorizedException();
+    if (user.isBanned === true) throw new UnauthorizedException();
     const accessToken = await this.authService.createToken(user);
     const refreshToken = await this.authService.createRefreshToken(
       user,

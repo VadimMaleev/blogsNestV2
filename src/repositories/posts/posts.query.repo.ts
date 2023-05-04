@@ -22,7 +22,7 @@ export class PostsQueryRepository {
     id: string,
     userId: string | null,
   ): Promise<PostsForResponse | null> {
-    const post = await this.postModel.findOne({ id: id });
+    const post = await this.postModel.findOne({ id: id, isVisible: true });
     if (!post) return null;
     const likesCount = await this.likesRepository.likesCount(id);
     const dislikeCount = await this.likesRepository.dislikeCount(id);
@@ -47,7 +47,7 @@ export class PostsQueryRepository {
     const sortDirection: 'asc' | 'desc' = query.sortDirection || 'desc';
 
     const items = await this.postModel
-      .find()
+      .find({ isVisible: true })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection });
@@ -88,7 +88,7 @@ export class PostsQueryRepository {
     const sortDirection: 'asc' | 'desc' = query.sortDirection || 'desc';
 
     const items = await this.postModel
-      .find({ blogId: blog.id })
+      .find({ blogId: blog.id, isVisible: true })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection });

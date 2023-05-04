@@ -22,6 +22,13 @@ export class UriParamsForBloggersApi {
   postId: string;
 }
 
+//BindBlogToUserParams
+
+export class BindBlogToUserParams {
+  blogId: string;
+  userId: string;
+}
+
 //Create
 export class CreateBlogDto {
   constructor(
@@ -61,6 +68,8 @@ export class CreatePostDto {
     public blogId: string,
     public blogName: string,
     public createdAt: Date,
+    public userId: string,
+    public isVisible: boolean,
   ) {}
 }
 
@@ -72,6 +81,7 @@ export class CreateCommentDto {
     public userLogin: string,
     public createdAt: Date,
     public postId: string,
+    public isVisible: boolean,
   ) {}
 }
 

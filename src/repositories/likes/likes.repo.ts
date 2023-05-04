@@ -10,11 +10,19 @@ export class LikesRepository {
   ) {}
 
   async likesCount(id: string): Promise<number> {
-    return this.likesModel.count({ idOfEntity: id, status: 'Like' });
+    return this.likesModel.count({
+      idOfEntity: id,
+      status: 'Like',
+      isVisible: true,
+    });
   }
 
   async dislikeCount(id: string): Promise<number> {
-    return this.likesModel.count({ idOfEntity: id, status: 'Dislike' });
+    return this.likesModel.count({
+      idOfEntity: id,
+      status: 'Dislike',
+      isVisible: true,
+    });
   }
 
   async getMyStatus(id: string, userId?: string | null): Promise<string> {
@@ -45,6 +53,7 @@ export class LikesRepository {
         login: login,
         addedAt: new Date(),
         status: likeStatus,
+        isVisible: true,
       });
       await this.likesModel.insertMany(likeOrUnlike);
     }
@@ -59,9 +68,15 @@ export class LikesRepository {
 
   async getNewestLikes(id: string): Promise<NewestLikes[]> {
     return this.likesModel
-      .find({ idOfEntity: id, status: 'Like' })
+      .find({ idOfEntity: id, status: 'Like', isVisible: true })
       .sort({ addedAt: -1 })
       .select('-_id -id -idOfEntity -status')
       .limit(3);
+  }
+
+  async updateVisibleStatus(userId: string, banStatus: boolean) {
+    await this.likesModel
+      .updateMany({ userId: userId })
+      .set({ isVisible: !banStatus });
   }
 }

@@ -75,7 +75,7 @@ export class UsersQueryRepository {
     });
   }
 
-  async findUserById(id: string) {
+  async findUserById(id: string): Promise<UserDocument> {
     return this.userModel.findOne({ id: id });
   }
 }

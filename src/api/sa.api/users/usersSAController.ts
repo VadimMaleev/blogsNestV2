@@ -11,7 +11,10 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { UserCreateInputModelType } from '../../../types/input.models';
+import {
+  BanUserInputModel,
+  UserCreateInputModelType,
+} from '../../../types/input.models';
 import { UsersService } from '../../services/users.service';
 import { UsersQueryDto } from '../../../types/dto';
 import { UsersQueryRepository } from '../../../repositories/users/users.query.repo';
@@ -49,8 +52,14 @@ export class UsersSAController {
   @Put(':id/ban')
   @UseGuards(BasicAuthGuard)
   @HttpCode(204)
-  async banOrUnbanUser(@Param('id') id: string) {
-    const isBanned = await this.usersService.banOrUnbanUser(id);
-    return isBanned;
+  async banOrUnbanUser(
+    @Param('id') id: string,
+    @Body() inputModel: BanUserInputModel,
+  ) {
+    return await this.usersService.banOrUnbanUser(
+      id,
+      inputModel.isBanned,
+      inputModel.banReason,
+    );
   }
 }

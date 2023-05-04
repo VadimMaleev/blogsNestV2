@@ -58,4 +58,17 @@ export class UsersRepository {
     await userInstance.save();
     return true;
   }
+
+  async updateBanStatus(
+    user: UserDocument,
+    banStatus: boolean,
+    banReason: string,
+  ) {
+    user.isBanned = banStatus;
+    user.banDate = new Date();
+    user.banReason = banReason;
+
+    await user.save();
+    return true;
+  }
 }

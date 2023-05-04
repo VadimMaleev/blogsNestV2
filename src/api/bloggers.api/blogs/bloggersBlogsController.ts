@@ -93,7 +93,11 @@ export class BloggersBlogsController {
     if (!blog) throw new NotFoundException('Blog not found');
     if (blog.userId !== req.user.id)
       throw new HttpException('Not your own', 403);
-    return this.postsService.createPostForBlog(postInputModel, blog);
+    return this.postsService.createPostForBlog(
+      postInputModel,
+      blog,
+      req.user.id,
+    );
   }
 
   @Put(':blogId/posts/:postId')

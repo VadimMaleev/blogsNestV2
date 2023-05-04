@@ -7,7 +7,6 @@ import { BlogsQueryRepository } from '../../repositories/blogs/blogs.query.repo'
 import { CreatePostDto, UriParamsForBloggersApi } from '../../types/dto';
 import { v4 as uuidv4 } from 'uuid';
 import { PostsRepository } from '../../repositories/posts/posts.repo';
-import { PostsForResponse } from '../../types/types';
 import { plugForCreatingPosts } from '../../helpers/plug.for.creating.posts.and.comments';
 import { UsersQueryRepository } from '../../repositories/users/users.query.repo';
 import { LikesRepository } from '../../repositories/likes/likes.repo';
@@ -22,29 +21,10 @@ export class PostsService {
     protected likesRepository: LikesRepository,
   ) {}
 
-  async createPost(
-    postInputModel: PostCreateInputModelType,
-  ): Promise<PostsForResponse | null> {
-    const blog = await this.blogsQueryRepository.getOneBlogById(
-      postInputModel.blogId,
-    );
-
-    const newPost = new CreatePostDto(
-      uuidv4(),
-      postInputModel.title,
-      postInputModel.shortDescription,
-      postInputModel.content,
-      postInputModel.blogId,
-      blog.name,
-      new Date(),
-    );
-    await this.postRepository.createPost(newPost);
-    return plugForCreatingPosts(newPost);
-  }
-
   async createPostForBlog(
     postInputModel: PostCreateFromBlogInputModelType,
     blog: BlogDocument,
+    userId: string,
   ) {
     const newPost = new CreatePostDto(
       uuidv4(),
@@ -54,6 +34,8 @@ export class PostsService {
       blog.id,
       blog.name,
       new Date(),
+      userId,
+      true,
     );
     await this.postRepository.createPost(newPost);
     return plugForCreatingPosts(newPost);

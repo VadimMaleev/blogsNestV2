@@ -68,4 +68,9 @@ export class DevicesRepository {
       return false;
     }
   }
+
+  async deleteDevicesForBannedUser(userId: string) {
+    await this.devicesModel.deleteMany({ userId: userId });
+    return true;
+  }
 }

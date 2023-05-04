@@ -21,7 +21,10 @@ export class CommentsQueryRepository {
     id: string,
     userId: string | null,
   ): Promise<CommentsForResponse | null> {
-    const comment = await this.commentModel.findOne({ id: id });
+    const comment = await this.commentModel.findOne({
+      id: id,
+      isVisible: true,
+    });
     if (!comment) throw new NotFoundException('Comment not found');
     const likesCount = await this.likesRepository.likesCount(id);
     const dislikeCount = await this.likesRepository.dislikeCount(id);
@@ -40,7 +43,7 @@ export class CommentsQueryRepository {
     const sortDirection: 'asc' | 'desc' = query.sortDirection || 'desc';
 
     const items = await this.commentModel
-      .find({ postId: id })
+      .find({ postId: id, isVisible: true })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection });

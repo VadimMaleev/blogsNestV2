@@ -4,6 +4,8 @@ import { BlogCreateInputModelType } from '../../types/input.models';
 import { BlogsForResponse } from '../../types/types';
 import { CreateBlogDto } from '../../types/dto';
 import { v4 as uuidv4 } from 'uuid';
+import { BlogDocument } from '../../repositories/blogs/blogs.schema';
+import { UserDocument } from '../../repositories/users/users.schema';
 
 @Injectable()
 export class BlogsService {
@@ -46,5 +48,9 @@ export class BlogsService {
 
   async deleteBlog(id: string, userId: string): Promise<boolean> {
     return this.blogsRepository.deleteBlog(id, userId);
+  }
+
+  async bindBlogToUser(blog: BlogDocument, user: UserDocument) {
+    return await this.blogsRepository.bindBlogToUser(blog, user);
   }
 }

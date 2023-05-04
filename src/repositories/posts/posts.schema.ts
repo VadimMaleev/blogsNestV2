@@ -27,6 +27,12 @@ export class Post {
   @Prop({ required: true })
   createdAt: Date;
 
+  @Prop({ required: true })
+  userId: string;
+
+  @Prop({ required: true })
+  isVisible: boolean;
+
   updatePost(updateData: PostCreateInputModelType) {
     this.title = updateData.title;
     this.shortDescription = updateData.shortDescription;

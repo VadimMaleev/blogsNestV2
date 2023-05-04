@@ -30,6 +30,7 @@ export class CommentsService {
       login,
       new Date(),
       postId,
+      true,
     );
     return await this.commentsRepository.createComment(newComment);
   }

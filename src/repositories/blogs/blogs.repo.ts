@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BlogCreateInputModelType } from '../../types/input.models';
 import { CreateBlogDto } from '../../types/dto';
+import { UserDocument } from '../users/users.schema';
 
 @Injectable()
 export class BlogsRepository {
@@ -35,6 +36,13 @@ export class BlogsRepository {
     blogInstance.updateBlog(inputModel);
 
     await blogInstance.save();
+    return true;
+  }
+
+  async bindBlogToUser(blog: BlogDocument, user: UserDocument) {
+    blog.userId = user.id;
+    blog.login = user.login;
+    await blog.save();
     return true;
   }
 }

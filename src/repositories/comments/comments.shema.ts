@@ -23,6 +23,9 @@ export class Comment {
   @Prop({ required: true })
   postId: string;
 
+  @Prop({ required: true })
+  isVisible: boolean;
+
   updateComment(content: string) {
     this.content = content;
   }
