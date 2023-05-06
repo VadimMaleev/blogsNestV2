@@ -40,7 +40,7 @@ export class UsersService {
       true,
       false,
       null,
-      'notBanned',
+      null,
     );
     await this.usersRepository.createUser(newUser);
 

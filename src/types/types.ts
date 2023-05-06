@@ -26,7 +26,7 @@ export type UsersForResponse = {
   banInfo: {
     isBanned: boolean;
     banDate: Date | null;
-    banReason: string;
+    banReason: string | null;
   };
 };
 

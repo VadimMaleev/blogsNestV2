@@ -35,8 +35,8 @@ export class User {
   @Prop()
   banDate: Date | null;
 
-  @Prop({ required: true })
-  banReason: string;
+  @Prop()
+  banReason: string | null;
 
   updateConfirmationCode(code: string, date: Date) {
     this.confirmationCode = code;
