@@ -32,7 +32,7 @@ export class User {
   @Prop({ required: true })
   isBanned: boolean;
 
-  @Prop({ required: true })
+  @Prop()
   banDate: Date | null;
 
   @Prop({ required: true })
