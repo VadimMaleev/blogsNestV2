@@ -9,7 +9,7 @@ import { UsersForResponse } from '../../types/types';
 import { UsersQueryRepository } from '../../repositories/users/users.query.repo';
 import { EmailAdapter } from '../../adapters/email-adapter';
 import { UserDocument } from '../../repositories/users/users.schema';
-import { DevicesRepository } from '../public.api/devices/devices.repository';
+import { DevicesRepository } from '../../repositories/devices/devices.repository';
 import { PostsRepository } from '../../repositories/posts/posts.repo';
 import { CommentsRepository } from '../../repositories/comments/comments.repo';
 import { LikesRepository } from '../../repositories/likes/likes.repo';

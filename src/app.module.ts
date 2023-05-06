@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PublicBlogsController } from './api/public.api/blogs/publicBlogsController';
-import { BlogsService } from './blogs/blogs.service';
 import { BlogsRepository } from './repositories/blogs/blogs.repo';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
@@ -33,9 +32,9 @@ import { RecoveryCodeRepository } from './repositories/recovery.codes/recovery.c
 import { EmailAdapter } from './adapters/email-adapter';
 import { JWTService } from './application/jwt.service';
 import { AuthController } from './api/public.api/auth/auth.controller';
-import { DevicesRepository } from './api/public.api/devices/devices.repository';
-import { DevicesQueryRepository } from './api/public.api/devices/devices.query.repository';
-import { Device, DeviceSchema } from './api/public.api/devices/devices.schema';
+import { DevicesRepository } from './repositories/devices/devices.repository';
+import { DevicesQueryRepository } from './repositories/devices/devices.query.repository';
+import { Device, DeviceSchema } from './repositories/devices/devices.schema';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DevicesController } from './api/public.api/devices/devices.controller';
 import { DevicesService } from './api/public.api/devices/devices.service';
@@ -45,6 +44,9 @@ import { Like, LikesSchema } from './repositories/likes/likes.schema';
 import { LikesRepository } from './repositories/likes/likes.repo';
 import { ExtractUserIdFromHeadersUseCase } from './helpers/extract.userId.from.headers';
 import { BlogExistRule } from './helpers/validator.blogId';
+import { BlogsService } from './api/services/blogs.service';
+import { BloggersBlogsController } from './api/bloggers.api/blogs/bloggersBlogsController';
+import { BlogsSAController } from './api/sa.api/blogs/blogsSAController';
 
 @Module({
   imports: [
@@ -74,6 +76,9 @@ import { BlogExistRule } from './helpers/validator.blogId';
     TestingController,
     AuthController,
     DevicesController,
+    BloggersBlogsController,
+    BlogsSAController,
+    UsersSAController,
   ],
   providers: [
     AppService,

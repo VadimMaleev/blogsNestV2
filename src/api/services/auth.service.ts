@@ -18,8 +18,8 @@ import { RecoveryCodeRepository } from '../../repositories/recovery.codes/recove
 import { UserDocument } from '../../repositories/users/users.schema';
 import { JWTService } from '../../application/jwt.service';
 import { randomUUID } from 'crypto';
-import { DevicesRepository } from '../public.api/devices/devices.repository';
-import { DevicesQueryRepository } from '../public.api/devices/devices.query.repository';
+import { DevicesRepository } from '../../repositories/devices/devices.repository';
+import { DevicesQueryRepository } from '../../repositories/devices/devices.query.repository';
 import { JwtRepository } from '../../application/jwt.repository';
 
 @Injectable()

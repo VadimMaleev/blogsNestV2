@@ -1,6 +1,6 @@
 import { JWTService } from '../../../application/jwt.service';
-import { DevicesRepository } from './devices.repository';
-import { DevicesQueryRepository } from './devices.query.repository';
+import { DevicesRepository } from '../../../repositories/devices/devices.repository';
+import { DevicesQueryRepository } from '../../../repositories/devices/devices.query.repository';
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()

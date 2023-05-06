@@ -8,7 +8,7 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { DevicesQueryRepository } from './devices.query.repository';
+import { DevicesQueryRepository } from '../../../repositories/devices/devices.query.repository';
 import { DevicesService } from './devices.service';
 import { JwtRefreshAuthGuard } from '../../../guards/jwt.refresh.auth.guard';
 
