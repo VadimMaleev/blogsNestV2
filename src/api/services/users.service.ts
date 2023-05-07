@@ -86,7 +86,18 @@ export class UsersService {
     const user: UserDocument = await this.usersQueryRepository.findUserById(id);
     if (!user) throw new BadRequestException();
 
-    await this.usersRepository.updateBanStatus(user, banStatus, banReason);
+    const banDate = banStatus ? new Date() : null;
+
+    if (!banStatus) {
+      banReason = null;
+    }
+
+    await this.usersRepository.updateBanStatus(
+      user,
+      banStatus,
+      banReason,
+      banDate,
+    );
 
     if (banStatus === true) {
       await this.devicesRepository.deleteDevicesForBannedUser(id);

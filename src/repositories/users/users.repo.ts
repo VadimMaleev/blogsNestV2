@@ -62,10 +62,11 @@ export class UsersRepository {
   async updateBanStatus(
     user: UserDocument,
     banStatus: boolean,
-    banReason: string,
+    banReason: string | null,
+    banDate: Date | null,
   ) {
     user.isBanned = banStatus;
-    user.banDate = new Date();
+    user.banDate = banDate;
     user.banReason = banReason;
 
     await user.save();
