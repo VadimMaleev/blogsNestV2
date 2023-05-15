@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 describe('AppController', () => {
   let appController: AppController;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [AppService],
@@ -16,7 +16,7 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+      expect(appController.getHello()).toBe('Hello Vadim - This Try Number 2!');
     });
   });
 });

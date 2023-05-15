@@ -2,7 +2,6 @@ import { IsBoolean, IsEnum, Length, Matches } from 'class-validator';
 import { LikesStatusEnum } from './types';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { BlogExists } from '../helpers/validator.blogId';
-import { PartialType } from '@nestjs/mapped-types';
 
 export class BlogCreateInputModelType {
   @Transform(({ value }: TransformFnParams) => value?.trim())
@@ -33,8 +32,7 @@ export class UserCreateInputModelType {
   email: string;
 }
 
-//TODO Проверить работает ли
-export class PostCreateInputModelType {
+export class PostUpdateInputModelType {
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(3, 30)
   title: string;
@@ -51,9 +49,19 @@ export class PostCreateInputModelType {
   blogId: string;
 }
 
-export class PostCreateFromBlogInputModelType extends PartialType(
-  PostCreateInputModelType,
-) {}
+export class PostCreateFromBlogInputModelType {
+  @Transform(({ value }: TransformFnParams) => value?.trim())
+  @Length(3, 30)
+  title: string;
+
+  @Transform(({ value }: TransformFnParams) => value?.trim())
+  @Length(3, 100)
+  shortDescription: string;
+
+  @Transform(({ value }: TransformFnParams) => value?.trim())
+  @Length(3, 1000)
+  content: string;
+}
 
 export class EmailInputModelType {
   @Matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)

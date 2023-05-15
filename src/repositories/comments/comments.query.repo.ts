@@ -23,7 +23,7 @@ export class CommentsQueryRepository {
   ): Promise<CommentsForResponse | null> {
     const comment = await this.commentModel.findOne({
       id: id,
-      // isVisible: true,
+      isVisible: true,
     });
     if (!comment) throw new NotFoundException('Comment not found');
     const likesCount = await this.likesRepository.likesCount(id);
