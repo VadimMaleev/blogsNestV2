@@ -1,8 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import {
-  PostCreateFromBlogInputModelType,
-  PostUpdateInputModelType,
-} from '../../types/input.models';
+import { PostCreateFromBlogInputModelType } from '../../types/input.models';
 import { BlogsQueryRepository } from '../../repositories/blogs/blogs.query.repo';
 import { CreatePostDto, UriParamsForBloggersApi } from '../../types/dto';
 import { v4 as uuidv4 } from 'uuid';
@@ -51,7 +48,7 @@ export class PostsService {
 
   async updatePost(
     postId: string,
-    postInputModel: PostUpdateInputModelType,
+    postInputModel: PostCreateFromBlogInputModelType,
     blogId: string,
     userId: string,
   ) {

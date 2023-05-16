@@ -1,6 +1,6 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { PostUpdateInputModelType } from '../../types/input.models';
+import { PostCreateFromBlogInputModelType } from '../../types/input.models';
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -33,11 +33,10 @@ export class Post {
   @Prop({ required: true })
   isVisible: boolean;
 
-  updatePost(updateData: PostUpdateInputModelType) {
+  updatePost(updateData: PostCreateFromBlogInputModelType) {
     this.title = updateData.title;
     this.shortDescription = updateData.shortDescription;
     this.content = updateData.content;
-    this.blogId = updateData.blogId;
   }
 }
 

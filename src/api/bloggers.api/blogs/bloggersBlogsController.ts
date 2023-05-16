@@ -18,7 +18,6 @@ import { PostsService } from '../../services/posts.service';
 import {
   BlogCreateInputModelType,
   PostCreateFromBlogInputModelType,
-  PostUpdateInputModelType,
 } from '../../../types/input.models';
 import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
 import { BlogsService } from '../../services/blogs.service';
@@ -105,7 +104,7 @@ export class BloggersBlogsController {
   @UseGuards(JwtAuthGuard)
   async updatePost(
     @Param() params: UriParamsForBloggersApi,
-    @Body() postInputModel: PostUpdateInputModelType,
+    @Body() postInputModel: PostCreateFromBlogInputModelType,
     @Request() req,
   ) {
     const isUpdated = await this.postsService.updatePost(
