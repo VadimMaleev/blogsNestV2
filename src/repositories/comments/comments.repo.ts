@@ -37,8 +37,9 @@ export class CommentsRepository {
   }
   //TODO check mongoose set method
   async updateVisibleStatus(userId: string, banStatus: boolean) {
-    await this.commentModel
-      .updateMany({ userId: userId })
-      .set({ isVisible: !banStatus });
+    await this.commentModel.updateMany(
+      { userId: userId },
+      { isVisible: !banStatus },
+    );
   }
 }

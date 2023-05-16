@@ -35,8 +35,9 @@ export class PostsRepository {
   }
   //TODO check mongoose set method
   async updateVisibleStatus(userId: string, banStatus: boolean) {
-    await this.postModel
-      .updateMany({ userId: userId })
-      .set({ isVisible: !banStatus });
+    await this.postModel.updateMany(
+      { userId: userId },
+      { isVisible: !banStatus },
+    );
   }
 }

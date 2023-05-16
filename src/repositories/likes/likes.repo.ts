@@ -75,8 +75,9 @@ export class LikesRepository {
   }
 
   async updateVisibleStatus(userId: string, banStatus: boolean) {
-    await this.likesModel
-      .updateMany({ userId: userId })
-      .set({ isVisible: !banStatus });
+    await this.likesModel.updateMany(
+      { userId: userId },
+      { isVisible: !banStatus },
+    );
   }
 }
