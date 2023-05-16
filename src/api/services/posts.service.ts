@@ -62,10 +62,16 @@ export class PostsService {
     blogId: string,
     userId: string,
   ) {
-    const blogForPost: BlogDocument =
-      await this.blogsQueryRepository.getOneBlogById(blogId);
-    if (blogForPost.userId !== userId)
-      throw new HttpException('Not your own', 403);
+    const blog: BlogDocument = await this.blogsQueryRepository.getOneBlogById(
+      blogId,
+    );
+    const post: PostDocument = await this.postsQueryRepository.findPostById(
+      postId,
+    );
+
+    if (!blog) throw new NotFoundException('Blog not found');
+    if (!post) throw new NotFoundException('Post not Found');
+    if (post.userId !== userId) throw new HttpException('Not your own', 403);
     return this.postRepository.updatePost(postId, postInputModel);
   }
 
