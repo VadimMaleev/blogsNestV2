@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { PostCreateFromBlogInputModelType } from '../../types/input.models';
 import { BlogsQueryRepository } from '../../repositories/blogs/blogs.query.repo';
 import { CreatePostDto, UriParamsForBloggersApi } from '../../types/dto';
@@ -8,12 +8,15 @@ import { plugForCreatingPosts } from '../../helpers/plug.for.creating.posts.and.
 import { UsersQueryRepository } from '../../repositories/users/users.query.repo';
 import { LikesRepository } from '../../repositories/likes/likes.repo';
 import { BlogDocument } from '../../repositories/blogs/blogs.schema';
+import { PostDocument } from '../../repositories/posts/posts.schema';
+import { PostsQueryRepository } from '../../repositories/posts/posts.query.repo';
 
 @Injectable()
 export class PostsService {
   constructor(
     protected blogsQueryRepository: BlogsQueryRepository,
     protected postRepository: PostsRepository,
+    protected postsQueryRepository: PostsQueryRepository,
     protected usersQueryRepository: UsersQueryRepository,
     protected likesRepository: LikesRepository,
   ) {}
@@ -39,10 +42,17 @@ export class PostsService {
   }
 
   async deletePost(params: UriParamsForBloggersApi, userId: string) {
-    const blogForPost: BlogDocument =
-      await this.blogsQueryRepository.getOneBlogById(params.blogId);
-    if (blogForPost.userId !== userId)
-      throw new HttpException('Not your own', 403);
+    const blog: BlogDocument = await this.blogsQueryRepository.getOneBlogById(
+      params.blogId,
+    );
+    const post: PostDocument = await this.postsQueryRepository.findPostById(
+      params.postId,
+    );
+
+    if (!blog) throw new NotFoundException('Blog not found');
+    if (!post) throw new NotFoundException('Post not Found');
+    if (post.userId !== userId) throw new HttpException('Not your own', 403);
+
     return this.postRepository.deletePost(params.postId);
   }
 
