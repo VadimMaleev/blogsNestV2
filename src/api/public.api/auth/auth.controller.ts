@@ -11,30 +11,29 @@ import {
   Res,
 } from '@nestjs/common';
 import { UsersQueryRepository } from '../../../repositories/users/users.query.repo';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../application/services/auth.service';
 import {
   EmailInputModelType,
   LoginInputModelType,
   NewPasswordInputModelType,
   UserCreateInputModelType,
 } from '../../../types/input.models';
-import { UsersService } from '../../services/users.service';
+import { UsersService } from '../../../application/services/users.service';
 import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
 import { JwtRefreshAuthGuard } from '../../../guards/jwt.refresh.auth.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { LogoutUseCase } from '../../../use.cases/logout.useCase';
-import { CreateUserUseCase } from '../../../use.cases/create.user.useCase';
-import { CheckCredentialsUseCase } from '../../../use.cases/check.credentials.useCase';
+import { LogoutCommand } from '../../../application/use.cases/logout.useCase';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from '../../../application/use.cases/create.user.useCase';
+import { CheckCredentialsCommand } from '../../../application/use.cases/check.credentials.useCase';
 
 @Controller('auth')
 export class AuthController {
   constructor(
+    private commandBus: CommandBus,
     protected usersQueryRepository: UsersQueryRepository,
     protected authService: AuthService,
     protected usersService: UsersService,
-    protected logoutUseCase: LogoutUseCase,
-    protected createUserUseCase: CreateUserUseCase,
-    protected checkCredentialsUseCase: CheckCredentialsUseCase,
   ) {}
 
   @Post('registration')
@@ -57,7 +56,7 @@ export class AuthController {
         { message: 'user does exist', field: 'login' },
       ]);
 
-    return await this.createUserUseCase.execute(userInputModel);
+    return await this.commandBus.execute(new CreateUserCommand(userInputModel));
   }
 
   @Post('registration-confirmation')
@@ -110,9 +109,8 @@ export class AuthController {
     @Request() req,
     @Res({ passthrough: true }) res,
   ) {
-    const user = await this.checkCredentialsUseCase.execute(
-      inputModel.loginOrEmail,
-      inputModel.password,
+    const user = await this.commandBus.execute(
+      new CheckCredentialsCommand(inputModel.loginOrEmail, inputModel.password),
     );
     if (!user) throw new UnauthorizedException();
     if (user.isBanned === true) throw new UnauthorizedException();
@@ -179,7 +177,9 @@ export class AuthController {
   async logout(@Request() req) {
     const user = req.user;
     const oldRefreshToken = req.cookies.refreshToken;
-    const isLogout = await this.logoutUseCase.execute(user.id, oldRefreshToken);
+    const isLogout = await this.commandBus.execute(
+      new LogoutCommand(user.id, oldRefreshToken),
+    );
     if (!isLogout) throw new UnauthorizedException();
   }
 

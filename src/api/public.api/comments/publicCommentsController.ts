@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { CommentsQueryRepository } from '../../../repositories/comments/comments.query.repo';
 import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
-import { CommentsService } from '../../services/comments.service';
+import { CommentsService } from '../../../application/services/comments.service';
 import {
   CommentCreateInputModel,
   LikeStatusInputModel,

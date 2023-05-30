@@ -8,11 +8,11 @@ import { UsersRepository } from '../../repositories/users/users.repo';
 import { EmailAdapter } from '../../adapters/email-adapter';
 import { RecoveryCodeRepository } from '../../repositories/recovery.codes/recovery.code.repo';
 import { UserDocument } from '../../repositories/users/users.schema';
-import { JWTService } from '../../application/jwt.service';
+import { JWTService } from '../../repositories/jwt/jwt.service';
 import { randomUUID } from 'crypto';
 import { DevicesRepository } from '../../repositories/devices/devices.repository';
 import { DevicesQueryRepository } from '../../repositories/devices/devices.query.repository';
-import { JwtRepository } from '../../application/jwt.repository';
+import { JwtRepository } from '../../repositories/jwt/jwt.repository';
 
 @Injectable()
 export class AuthService {

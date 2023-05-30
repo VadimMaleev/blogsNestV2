@@ -15,12 +15,12 @@ import {
   CommentCreateInputModel,
   LikeStatusInputModel,
 } from '../../../types/input.models';
-import { PostsService } from '../../services/posts.service';
+import { PostsService } from '../../../application/services/posts.service';
 import { PostsQueryRepository } from '../../../repositories/posts/posts.query.repo';
 import { PaginationDto } from '../../../types/dto';
 import { CommentsQueryRepository } from '../../../repositories/comments/comments.query.repo';
 import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
-import { CommentsService } from '../../services/comments.service';
+import { CommentsService } from '../../../application/services/comments.service';
 import { ExtractUserIdFromHeadersUseCase } from '../../../helpers/extract.userId.from.headers';
 
 @Controller('posts')

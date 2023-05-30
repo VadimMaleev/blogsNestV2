@@ -5,9 +5,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { UsersQueryRepository } from '../repositories/users/users.query.repo';
-import { JWTService } from '../application/jwt.service';
+import { JWTService } from '../repositories/jwt/jwt.service';
 import { Request } from 'express';
-import { JwtRepository } from '../application/jwt.repository';
+import { JwtRepository } from '../repositories/jwt/jwt.repository';
 
 @Injectable()
 export class JwtRefreshAuthGuard implements CanActivate {

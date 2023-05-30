@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { BlogsQueryRepository } from '../../../repositories/blogs/blogs.query.repo';
 
-import { BlogsService } from '../../services/blogs.service';
+import { BlogsService } from '../../../application/services/blogs.service';
 import { BindBlogToUserParams, BlogsQueryDto } from '../../../types/dto';
 import { BasicAuthGuard } from '../../../guards/basic.auth.guard';
 import { UsersQueryRepository } from '../../../repositories/users/users.query.repo';

@@ -1,4 +1,4 @@
-import { JWTService } from '../application/jwt.service';
+import { JWTService } from '../repositories/jwt/jwt.service';
 import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 

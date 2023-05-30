@@ -1,15 +1,17 @@
-import { Injectable } from '@nestjs/common';
-
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
-
 import { GenerateHashUseCase } from './generate.hash.useCase';
-import { UsersRepository } from '../repositories/users/users.repo';
-import { EmailAdapter } from '../adapters/email-adapter';
-import { UserCreateInputModelType } from '../types/input.models';
-import { CreateUserDto } from '../types/dto';
+import { UsersRepository } from '../../repositories/users/users.repo';
+import { EmailAdapter } from '../../adapters/email-adapter';
+import { UserCreateInputModelType } from '../../types/input.models';
+import { CreateUserDto } from '../../types/dto';
+import { CommandHandler } from '@nestjs/cqrs';
 
-@Injectable()
+export class CreateUserCommand {
+  constructor(public user: UserCreateInputModelType) {}
+}
+
+@CommandHandler(CreateUserCommand)
 export class CreateUserUseCase {
   constructor(
     protected usersRepository: UsersRepository,
@@ -17,12 +19,12 @@ export class CreateUserUseCase {
     protected generateHashUseCase: GenerateHashUseCase,
   ) {}
 
-  async execute(user: UserCreateInputModelType) {
-    const hash = await this.generateHashUseCase.execute(user.password);
+  async execute(command: CreateUserCommand) {
+    const hash = await this.generateHashUseCase.execute(command.user.password);
     const newUser = new CreateUserDto(
       uuidv4(),
-      user.login,
-      user.email,
+      command.user.login,
+      command.user.email,
       hash,
       new Date(),
       uuidv4(),

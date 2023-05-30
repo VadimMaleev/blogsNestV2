@@ -15,7 +15,7 @@ import {
   BanUserInputModel,
   UserCreateInputModelType,
 } from '../../../types/input.models';
-import { UsersService } from '../../services/users.service';
+import { UsersService } from '../../../application/services/users.service';
 import { UsersQueryDto } from '../../../types/dto';
 import { UsersQueryRepository } from '../../../repositories/users/users.query.repo';
 import { BasicAuthGuard } from '../../../guards/basic.auth.guard';

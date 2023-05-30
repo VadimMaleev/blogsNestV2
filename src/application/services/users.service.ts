@@ -12,7 +12,7 @@ import { DevicesRepository } from '../../repositories/devices/devices.repository
 import { PostsRepository } from '../../repositories/posts/posts.repo';
 import { CommentsRepository } from '../../repositories/comments/comments.repo';
 import { LikesRepository } from '../../repositories/likes/likes.repo';
-import { GenerateHashUseCase } from '../../use.cases/generate.hash.useCase';
+import { GenerateHashUseCase } from '../use.cases/generate.hash.useCase';
 
 @Injectable()
 export class UsersService {
