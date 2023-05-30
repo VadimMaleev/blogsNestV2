@@ -47,6 +47,17 @@ import { BlogExistRule } from './helpers/validator.blogId';
 import { BlogsService } from './api/services/blogs.service';
 import { BloggersBlogsController } from './api/bloggers.api/blogs/bloggersBlogsController';
 import { BlogsSAController } from './api/sa.api/blogs/blogsSAController';
+import { CheckCredentialsUseCase } from './use.cases/check.credentials.useCase';
+import { CreateUserUseCase } from './use.cases/create.user.useCase';
+import { GenerateHashUseCase } from './use.cases/generate.hash.useCase';
+import { LogoutUseCase } from './use.cases/logout.useCase';
+
+const useCases = [
+  CheckCredentialsUseCase,
+  CreateUserUseCase,
+  GenerateHashUseCase,
+  LogoutUseCase,
+];
 
 @Module({
   imports: [
@@ -105,6 +116,7 @@ import { BlogsSAController } from './api/sa.api/blogs/blogsSAController';
     LikesRepository,
     ExtractUserIdFromHeadersUseCase,
     BlogExistRule,
+    ...useCases,
   ],
 })
 export class AppModule {}

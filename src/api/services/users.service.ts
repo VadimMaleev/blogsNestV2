@@ -1,6 +1,5 @@
 import { UserCreateInputModelType } from '../../types/input.models';
 import { v4 as uuidv4 } from 'uuid';
-import { AuthService } from './auth.service';
 import add from 'date-fns/add';
 import { UsersRepository } from '../../repositories/users/users.repo';
 import { CreateUserDto } from '../../types/dto';
@@ -13,11 +12,11 @@ import { DevicesRepository } from '../../repositories/devices/devices.repository
 import { PostsRepository } from '../../repositories/posts/posts.repo';
 import { CommentsRepository } from '../../repositories/comments/comments.repo';
 import { LikesRepository } from '../../repositories/likes/likes.repo';
+import { GenerateHashUseCase } from '../../use.cases/generate.hash.useCase';
 
 @Injectable()
 export class UsersService {
   constructor(
-    protected authService: AuthService,
     protected usersRepository: UsersRepository,
     protected usersQueryRepository: UsersQueryRepository,
     protected emailAdapter: EmailAdapter,
@@ -25,10 +24,11 @@ export class UsersService {
     protected postsRepository: PostsRepository,
     protected commentsRepository: CommentsRepository,
     protected likesRepository: LikesRepository,
+    protected generateHashUseCase: GenerateHashUseCase,
   ) {}
 
   async createUser(user: UserCreateInputModelType): Promise<UsersForResponse> {
-    const hash = await this.authService.generateHash(user.password);
+    const hash = await this.generateHashUseCase.execute(user.password);
     const newUser = new CreateUserDto(
       uuidv4(),
       user.login,

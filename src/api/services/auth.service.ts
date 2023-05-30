@@ -1,19 +1,11 @@
 import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
-import {
-  NewPasswordInputModelType,
-  UserCreateInputModelType,
-} from '../../types/input.models';
-import {
-  CreateDeviceDto,
-  CreateUserDto,
-  RecoveryCodeDto,
-} from '../../types/dto';
+import { NewPasswordInputModelType } from '../../types/input.models';
+import { CreateDeviceDto, RecoveryCodeDto } from '../../types/dto';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import { UsersRepository } from '../../repositories/users/users.repo';
 import { EmailAdapter } from '../../adapters/email-adapter';
-import { UsersQueryRepository } from '../../repositories/users/users.query.repo';
 import { RecoveryCodeRepository } from '../../repositories/recovery.codes/recovery.code.repo';
 import { UserDocument } from '../../repositories/users/users.schema';
 import { JWTService } from '../../application/jwt.service';
@@ -27,60 +19,12 @@ export class AuthService {
   constructor(
     protected usersRepository: UsersRepository,
     protected emailAdapter: EmailAdapter,
-    protected usersQueryRepository: UsersQueryRepository,
     protected recoveryCodeRepository: RecoveryCodeRepository,
     protected jwtService: JWTService,
     protected devicesRepository: DevicesRepository,
     protected devicesQueryRepository: DevicesQueryRepository,
     protected jwtRepository: JwtRepository,
   ) {}
-
-  async generateHash(password: string) {
-    return await bcrypt.hash(password, 10);
-  }
-
-  async createUser(user: UserCreateInputModelType) {
-    const hash = await this.generateHash(user.password);
-    const newUser = new CreateUserDto(
-      uuidv4(),
-      user.login,
-      user.email,
-      hash,
-      new Date(),
-      uuidv4(),
-      add(new Date(), { hours: 3 }),
-      false,
-      false,
-      null,
-      'notBanned',
-    );
-    await this.usersRepository.createUser(newUser);
-    await this.emailAdapter.sendEmailConfirmationCode(
-      newUser.confirmationCode,
-      newUser.email,
-    );
-
-    return {
-      id: newUser.id,
-      login: newUser.login,
-      email: newUser.email,
-      createdAt: newUser.createdAt,
-      banInfo: {
-        isBanned: newUser.isBanned,
-        banDate: newUser.banDate,
-        banReason: newUser.banReason,
-      },
-    };
-  }
-
-  async checkCredential(loginOrEmail: string, password: string) {
-    const user = await this.usersQueryRepository.findUserByLoginOrEmail(
-      loginOrEmail,
-    );
-    if (!user) return null;
-    const isCompare = await bcrypt.compare(password, user.passwordHash);
-    return isCompare ? user : null;
-  }
 
   async passwordRecovery(userId: string, email: string) {
     const code = uuidv4();
@@ -156,19 +100,5 @@ export class AuthService {
     if (!isDateUpdated) return null;
     await this.jwtRepository.expireRefreshToken(oldRefreshToken);
     return refreshToken;
-  }
-
-  async logout(userId: string, oldRefreshToken: string) {
-    const jwtPayload = await this.jwtService.extractPayloadFromToken(
-      oldRefreshToken,
-    );
-    const deviceId = jwtPayload.deviceId;
-    const lastActiveDate = new Date(jwtPayload.iat * 1000).toISOString();
-    await this.jwtRepository.expireRefreshToken(oldRefreshToken);
-    return this.devicesRepository.findAndDeleteDeviceByDeviceAndUserIdAndDate(
-      userId,
-      deviceId,
-      lastActiveDate,
-    );
   }
 }

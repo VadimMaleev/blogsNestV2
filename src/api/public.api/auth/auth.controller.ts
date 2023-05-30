@@ -22,6 +22,9 @@ import { UsersService } from '../../services/users.service';
 import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
 import { JwtRefreshAuthGuard } from '../../../guards/jwt.refresh.auth.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { LogoutUseCase } from '../../../use.cases/logout.useCase';
+import { CreateUserUseCase } from '../../../use.cases/create.user.useCase';
+import { CheckCredentialsUseCase } from '../../../use.cases/check.credentials.useCase';
 
 @Controller('auth')
 export class AuthController {
@@ -29,6 +32,9 @@ export class AuthController {
     protected usersQueryRepository: UsersQueryRepository,
     protected authService: AuthService,
     protected usersService: UsersService,
+    protected logoutUseCase: LogoutUseCase,
+    protected createUserUseCase: CreateUserUseCase,
+    protected checkCredentialsUseCase: CheckCredentialsUseCase,
   ) {}
 
   @Post('registration')
@@ -51,7 +57,7 @@ export class AuthController {
         { message: 'user does exist', field: 'login' },
       ]);
 
-    return await this.authService.createUser(userInputModel);
+    return await this.createUserUseCase.execute(userInputModel);
   }
 
   @Post('registration-confirmation')
@@ -104,7 +110,7 @@ export class AuthController {
     @Request() req,
     @Res({ passthrough: true }) res,
   ) {
-    const user = await this.authService.checkCredential(
+    const user = await this.checkCredentialsUseCase.execute(
       inputModel.loginOrEmail,
       inputModel.password,
     );
@@ -173,7 +179,7 @@ export class AuthController {
   async logout(@Request() req) {
     const user = req.user;
     const oldRefreshToken = req.cookies.refreshToken;
-    const isLogout = await this.authService.logout(user.id, oldRefreshToken);
+    const isLogout = await this.logoutUseCase.execute(user.id, oldRefreshToken);
     if (!isLogout) throw new UnauthorizedException();
   }
 
