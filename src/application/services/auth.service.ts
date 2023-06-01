@@ -26,6 +26,10 @@ export class AuthService {
     protected jwtRepository: JwtRepository,
   ) {}
 
+  async generateHash(password: string) {
+    return await bcrypt.hash(password, 10);
+  }
+
   async passwordRecovery(userId: string, email: string) {
     const code = uuidv4();
     const recoveryCode = new RecoveryCodeDto(

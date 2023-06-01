@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
-import { GenerateHashUseCase } from './generate.hash.useCase';
 import { UsersRepository } from '../../repositories/users/users.repo';
 import { EmailAdapter } from '../../adapters/email-adapter';
 import { UserCreateInputModelType } from '../../types/input.models';
 import { CreateUserDto } from '../../types/dto';
 import { CommandHandler } from '@nestjs/cqrs';
+import { AuthService } from '../services/auth.service';
 
 export class CreateUserCommand {
   constructor(public user: UserCreateInputModelType) {}
@@ -16,11 +16,11 @@ export class CreateUserUseCase {
   constructor(
     protected usersRepository: UsersRepository,
     protected emailAdapter: EmailAdapter,
-    protected generateHashUseCase: GenerateHashUseCase,
+    protected authService: AuthService,
   ) {}
 
   async execute(command: CreateUserCommand) {
-    const hash = await this.generateHashUseCase.execute(command.user.password);
+    const hash = await this.authService.generateHash(command.user.password);
     const newUser = new CreateUserDto(
       uuidv4(),
       command.user.login,
