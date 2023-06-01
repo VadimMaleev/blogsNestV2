@@ -26,6 +26,8 @@ import { LogoutCommand } from '../../../application/use.cases/logout.useCase';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateUserCommand } from '../../../application/use.cases/create.user.useCase';
 import { CheckCredentialsCommand } from '../../../application/use.cases/check.credentials.useCase';
+import { PasswordRecoveryCommand } from '../../../application/use.cases/password.recovery.useCase';
+import { NewPasswordCommand } from '../../../application/use.cases/new.password.useCase';
 
 @Controller('auth')
 export class AuthController {
@@ -135,14 +137,18 @@ export class AuthController {
       inputModel.email,
     );
     if (!user) return HttpCode(204);
-    await this.authService.passwordRecovery(user.id, inputModel.email);
+    await this.commandBus.execute(
+      new PasswordRecoveryCommand(user.id, inputModel.email),
+    );
   }
 
   @Post('new-password')
   @HttpCode(204)
   @UseGuards(ThrottlerGuard)
   async newPassword(@Body() inputModel: NewPasswordInputModelType) {
-    const result = await this.authService.newPassword(inputModel);
+    const result = await this.commandBus.execute(
+      new NewPasswordCommand(inputModel),
+    );
     if (!result)
       throw new BadRequestException([
         {

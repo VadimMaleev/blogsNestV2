@@ -1,12 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
-import { NewPasswordInputModelType } from '../../types/input.models';
-import { CreateDeviceDto, RecoveryCodeDto } from '../../types/dto';
-import { v4 as uuidv4 } from 'uuid';
-import add from 'date-fns/add';
-import { UsersRepository } from '../../repositories/users/users.repo';
-import { EmailAdapter } from '../../adapters/email-adapter';
-import { RecoveryCodeRepository } from '../../repositories/recovery.codes/recovery.code.repo';
+import { CreateDeviceDto } from '../../types/dto';
 import { UserDocument } from '../../repositories/users/users.schema';
 import { JWTService } from '../../repositories/jwt/jwt.service';
 import { randomUUID } from 'crypto';
@@ -17,9 +11,6 @@ import { JwtRepository } from '../../repositories/jwt/jwt.repository';
 @Injectable()
 export class AuthService {
   constructor(
-    protected usersRepository: UsersRepository,
-    protected emailAdapter: EmailAdapter,
-    protected recoveryCodeRepository: RecoveryCodeRepository,
     protected jwtService: JWTService,
     protected devicesRepository: DevicesRepository,
     protected devicesQueryRepository: DevicesQueryRepository,
@@ -28,33 +19,6 @@ export class AuthService {
 
   async generateHash(password: string) {
     return await bcrypt.hash(password, 10);
-  }
-
-  async passwordRecovery(userId: string, email: string) {
-    const code = uuidv4();
-    const recoveryCode = new RecoveryCodeDto(
-      code,
-      add(new Date(), { hours: 3 }),
-      userId,
-    );
-    await this.recoveryCodeRepository.createRecoveryCode(recoveryCode);
-    await this.emailAdapter.passwordRecovery(code, email);
-  }
-
-  async newPassword(inputModel: NewPasswordInputModelType): Promise<boolean> {
-    const code = await this.recoveryCodeRepository.findCode(
-      inputModel.recoveryCode,
-    );
-    if (!code) return false;
-    if (code.codeExpirationDate < new Date()) return false;
-
-    const newPasswordHash = await bcrypt.hash(inputModel.newPassword, 10);
-
-    await this.recoveryCodeRepository.deleteCode(inputModel.recoveryCode);
-    return await this.usersRepository.updatePassword(
-      newPasswordHash,
-      code.userId,
-    );
   }
 
   async createToken(user: UserDocument) {
