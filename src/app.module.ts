@@ -49,15 +49,17 @@ import { BloggersBlogsController } from './api/bloggers.api/blogs/bloggersBlogsC
 import { BlogsSAController } from './api/sa.api/blogs/blogsSAController';
 import { CheckCredentialsUseCase } from './application/use.cases/check.credentials.useCase';
 import { CreateUserUseCase } from './application/use.cases/create.user.useCase';
-import { GenerateHashUseCase } from './application/use.cases/generate.hash.useCase';
 import { LogoutUseCase } from './application/use.cases/logout.useCase';
 import { CqrsModule } from '@nestjs/cqrs';
+import { NewPasswordUseCase } from './application/use.cases/new.password.useCase';
+import { PasswordRecoveryUseCase } from './application/use.cases/password.recovery.useCase';
 
 const useCases = [
   CheckCredentialsUseCase,
   CreateUserUseCase,
-  GenerateHashUseCase,
   LogoutUseCase,
+  NewPasswordUseCase,
+  PasswordRecoveryUseCase,
 ];
 
 @Module({
