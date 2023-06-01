@@ -61,7 +61,7 @@ export class BlogsService {
     return await this.blogsRepository.bindBlogToUser(blog, user);
   }
 
-  async banBlog(id: string, banStatus: boolean) {
+  async banOrUnbanBlog(id: string, banStatus: boolean) {
     const blog = await this.blogsQueryRepository.getOneBlogById(id);
     if (!blog) throw new BadRequestException();
 
