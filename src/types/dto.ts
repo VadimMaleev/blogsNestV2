@@ -40,6 +40,7 @@ export class CreateBlogDto {
     public isMembership: boolean,
     public userId: string,
     public login: string,
+    public isBanned: boolean,
   ) {}
 }
 

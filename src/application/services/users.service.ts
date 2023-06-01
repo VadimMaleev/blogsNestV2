@@ -103,7 +103,7 @@ export class UsersService {
       await this.devicesRepository.deleteDevicesForBannedUser(id);
     }
 
-    await this.postsRepository.updateVisibleStatus(id, banStatus);
+    //await this.postsRepository.updateVisibleStatus(id, banStatus);
     await this.commentsRepository.updateVisibleStatus(id, banStatus);
     await this.likesRepository.updateVisibleStatus(id, banStatus);
   }

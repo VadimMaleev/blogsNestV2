@@ -18,7 +18,10 @@ export class BlogsQueryRepository {
     const sortDirection: 'asc' | 'desc' = query.sortDirection || 'desc';
 
     const items = await this.blogModel
-      .find({ name: { $regex: searchNameTerm, $options: 'i' } }, { _id: 0 })
+      .find(
+        { name: { $regex: searchNameTerm, $options: 'i' } },
+        { _id: 0, isBanned: 0, userId: 0, login: 0 },
+      )
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection })
@@ -53,7 +56,7 @@ export class BlogsQueryRepository {
     const items = await this.blogModel
       .find(
         { userId: userId, name: { $regex: searchNameTerm, $options: 'i' } },
-        { _id: 0, userId: 0, login: 0 },
+        { _id: 0, userId: 0, login: 0, isBanned: 0 },
       )
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
@@ -78,7 +81,10 @@ export class BlogsQueryRepository {
   }
 
   async getPublicBlogById(id: string): Promise<BlogsForResponse | null> {
-    return this.blogModel.findOne({ id: id }, { _id: 0, userId: 0, login: 0 });
+    return this.blogModel.findOne(
+      { id: id },
+      { _id: 0, userId: 0, login: 0, isBanned: 0 },
+    );
   }
 
   async getBlogsForAdmin(query: BlogsQueryDto) {

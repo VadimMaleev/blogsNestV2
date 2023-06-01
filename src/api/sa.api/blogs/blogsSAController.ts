@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -14,6 +15,7 @@ import { BlogsService } from '../../../application/services/blogs.service';
 import { BindBlogToUserParams, BlogsQueryDto } from '../../../types/dto';
 import { BasicAuthGuard } from '../../../guards/basic.auth.guard';
 import { UsersQueryRepository } from '../../../repositories/users/users.query.repo';
+import { BanUserInputModel } from '../../../types/input.models';
 
 @Controller('sa/blogs')
 export class BlogsSAController {
@@ -40,5 +42,12 @@ export class BlogsSAController {
     if (!blog || blog.userId) throw new BadRequestException('blogId invalid');
 
     return await this.blogsService.bindBlogToUser(blog, user);
+  }
+
+  @Put(':id/ban')
+  @HttpCode(204)
+  @UseGuards(BasicAuthGuard)
+  async banBlog(@Param() id: string, @Body() inputModel: BanUserInputModel) {
+    return await this.blogsService.banBlog(id, inputModel.isBanned);
   }
 }

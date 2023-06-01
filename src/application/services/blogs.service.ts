@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { BlogsRepository } from '../../repositories/blogs/blogs.repo';
 import { BlogCreateInputModelType } from '../../types/input.models';
 import { BlogsForResponse } from '../../types/types';
@@ -6,10 +6,16 @@ import { CreateBlogDto } from '../../types/dto';
 import { v4 as uuidv4 } from 'uuid';
 import { BlogDocument } from '../../repositories/blogs/blogs.schema';
 import { UserDocument } from '../../repositories/users/users.schema';
+import { BlogsQueryRepository } from '../../repositories/blogs/blogs.query.repo';
+import { PostsRepository } from '../../repositories/posts/posts.repo';
 
 @Injectable()
 export class BlogsService {
-  constructor(protected blogsRepository: BlogsRepository) {}
+  constructor(
+    protected blogsRepository: BlogsRepository,
+    protected blogsQueryRepository: BlogsQueryRepository,
+    protected postsRepository: PostsRepository,
+  ) {}
 
   async createBlog(
     blog: BlogCreateInputModelType,
@@ -25,6 +31,7 @@ export class BlogsService {
       false,
       userId,
       login,
+      false,
     );
 
     await this.blogsRepository.createBlog(newBlog);
@@ -52,5 +59,14 @@ export class BlogsService {
 
   async bindBlogToUser(blog: BlogDocument, user: UserDocument) {
     return await this.blogsRepository.bindBlogToUser(blog, user);
+  }
+
+  async banBlog(id: string, banStatus: boolean) {
+    const blog = await this.blogsQueryRepository.getOneBlogById(id);
+    if (!blog) throw new BadRequestException();
+
+    await this.blogsRepository.updateBanStatus(blog, banStatus);
+
+    await this.postsRepository.updateVisibleStatus(id, banStatus);
   }
 }

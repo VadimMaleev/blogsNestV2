@@ -30,6 +30,9 @@ export class Blog {
   @Prop({ required: true })
   login: string;
 
+  @Prop({ required: true })
+  isBanned: boolean;
+
   updateBlog(updateData: BlogCreateInputModelType) {
     this.name = updateData.name;
     this.description = updateData.description;

@@ -45,4 +45,11 @@ export class BlogsRepository {
     await blog.save();
     return true;
   }
+
+  async updateBanStatus(blog: BlogDocument, banStatus: boolean) {
+    blog.isBanned = banStatus;
+
+    await blog.save();
+    return true;
+  }
 }
