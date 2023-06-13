@@ -52,11 +52,11 @@ export class UsersSAController {
   @Put(':id/ban')
   @UseGuards(BasicAuthGuard)
   @HttpCode(204)
-  async banOrUnbanUser(
+  async updateBanStatusForUser(
     @Param('id') id: string,
     @Body() inputModel: BanUserInputModel,
   ) {
-    return await this.usersService.banOrUnbanUser(
+    return await this.usersService.updateBanStatusForUser(
       id,
       inputModel.isBanned,
       inputModel.banReason,

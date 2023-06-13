@@ -89,15 +89,33 @@ export type CommentsForResponse = {
   };
 };
 
+export type NewestLikes = {
+  addedAt: Date;
+  userId: string;
+  login: string;
+};
+
+export type BannedUsersForBlogResponse = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: BannedUserForBlog[];
+};
+
+export type BannedUserForBlog = {
+  id: string;
+  login: string;
+  banInfo: {
+    isBanned: boolean;
+    banDate: Date;
+    banReason: string;
+  };
+};
+
 //Enums
 export enum LikesStatusEnum {
   Like = 'Like',
   Dislike = 'Dislike',
   None = 'None',
 }
-
-export type NewestLikes = {
-  addedAt: Date;
-  userId: string;
-  login: string;
-};

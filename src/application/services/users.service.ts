@@ -2,7 +2,7 @@ import { UserCreateInputModelType } from '../../types/input.models';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import { UsersRepository } from '../../repositories/users/users.repo';
-import { CreateUserDto } from '../../types/dto';
+import { BannedUserForBlogDto, CreateUserDto } from '../../types/dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersForResponse } from '../../types/types';
 import { UsersQueryRepository } from '../../repositories/users/users.query.repo';
@@ -13,6 +13,9 @@ import { PostsRepository } from '../../repositories/posts/posts.repo';
 import { CommentsRepository } from '../../repositories/comments/comments.repo';
 import { LikesRepository } from '../../repositories/likes/likes.repo';
 import { AuthService } from './auth.service';
+import { BlogsRepository } from '../../repositories/blogs/blogs.repo';
+import { BlogDocument } from '../../repositories/blogs/blogs.schema';
+import { BannedUsersForBlogRepository } from '../../repositories/users/banned.users.for.blog.repo';
 
 @Injectable()
 export class UsersService {
@@ -25,6 +28,8 @@ export class UsersService {
     protected commentsRepository: CommentsRepository,
     protected likesRepository: LikesRepository,
     protected authService: AuthService,
+    protected blogsRepository: BlogsRepository,
+    protected bannedUsersForBlogRepository: BannedUsersForBlogRepository,
   ) {}
 
   async createUser(user: UserCreateInputModelType): Promise<UsersForResponse> {
@@ -82,7 +87,11 @@ export class UsersService {
     await this.emailAdapter.sendEmailConfirmationCode(confirmCode, email);
   }
 
-  async banOrUnbanUser(id: string, banStatus: boolean, banReason: string) {
+  async updateBanStatusForUser(
+    id: string,
+    banStatus: boolean,
+    banReason: string,
+  ) {
     const user: UserDocument = await this.usersQueryRepository.findUserById(id);
     if (!user) throw new BadRequestException();
 
@@ -106,5 +115,34 @@ export class UsersService {
     //await this.postsRepository.updateVisibleStatus(id, banStatus);
     await this.commentsRepository.updateVisibleStatus(id, banStatus);
     await this.likesRepository.updateVisibleStatus(id, banStatus);
+  }
+
+  async updateUserBanStatusForBlog(
+    id: string,
+    banStatus: boolean,
+    banReason: string,
+    userIdBlogOwner: string,
+  ) {
+    const user: UserDocument = await this.usersQueryRepository.findUserById(id);
+    if (!user) throw new BadRequestException();
+
+    const blog: BlogDocument = await this.blogsRepository.getBlogByUserId(
+      userIdBlogOwner,
+    );
+
+    const bannedUser = new BannedUserForBlogDto(
+      id,
+      user.login,
+      banStatus,
+      banReason,
+      new Date(),
+      blog.id,
+    );
+
+    if (banStatus) {
+      return await this.bannedUsersForBlogRepository.addUser(bannedUser);
+    } else {
+      return await this.bannedUsersForBlogRepository.deleteUser(id);
+    }
   }
 }

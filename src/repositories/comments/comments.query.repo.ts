@@ -3,17 +3,20 @@ import {
   CommentsPaginationResponse,
 } from '../../types/types';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, PipelineStage } from 'mongoose';
 import { Comment, CommentDocument } from './comments.shema';
 import { mapCommentWithLikes } from '../../helpers/map.comment.with.likes';
 import { PaginationDto } from '../../types/dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LikesRepository } from '../likes/likes.repo';
+import { Post, PostDocument } from '../posts/posts.schema';
+import { mapCommentsForBlog } from '../../helpers/map.comments.for.Blog';
 
 @Injectable()
 export class CommentsQueryRepository {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+    @InjectModel(Post.name) private postModel: Model<PostDocument>,
     protected likesRepository: LikesRepository,
   ) {}
 
@@ -44,9 +47,9 @@ export class CommentsQueryRepository {
 
     const items = await this.commentModel
       .find({ postId: id, isVisible: true })
+      .sort({ [sortBy]: sortDirection })
       .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
-      .sort({ [sortBy]: sortDirection });
+      .limit(pageSize);
 
     const itemsWithLikes = await Promise.all(
       items.map(async (i) => {
@@ -71,5 +74,49 @@ export class CommentsQueryRepository {
 
   async findCommentById(id: string): Promise<CommentDocument> {
     return this.commentModel.findOne({ id: id });
+  }
+
+  async findAllCommentsForBlogOwner(userId: string, query: PaginationDto) {
+    const pageNumber: number = Number(query.pageNumber) || 1;
+    const pageSize: number = Number(query.pageSize) || 10;
+    const sortBy: string = query.sortBy || 'createdAt';
+    const sortDirection = query.sortDirection === 'asc' ? 1 : -1;
+
+    const items = await this.commentModel.aggregate([
+      ...this.lookUpAllCommentsForBlogOwner(userId),
+      { $sort: { [sortBy]: sortDirection } },
+      { $skip: (pageNumber - 1) * pageSize },
+      { $limit: pageSize },
+    ]);
+
+    const itemsForResponse = items.map(mapCommentsForBlog);
+
+    const totalCount = await this.commentModel.aggregate([
+      ...this.lookUpAllCommentsForBlogOwner(userId),
+      { $count: 'Total' },
+    ]);
+
+    return {
+      pagesCount: totalCount[0].Total / pageSize,
+      page: pageNumber,
+      pageSize: pageSize,
+      totalCount: totalCount[0].Total,
+      items: itemsForResponse,
+    };
+  }
+
+  private lookUpAllCommentsForBlogOwner(userId: string): PipelineStage[] {
+    return [
+      {
+        $lookup: {
+          from: 'posts',
+          localField: 'postId',
+          foreignField: 'id',
+          as: 'postInfo',
+        },
+      },
+      { $unwind: { path: '$postInfo' } },
+      { $match: { 'postInfo.userId': userId, isVisible: true } },
+    ];
   }
 }

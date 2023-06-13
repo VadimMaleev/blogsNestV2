@@ -53,6 +53,12 @@ import { LogoutUseCase } from './application/use.cases/logout.useCase';
 import { CqrsModule } from '@nestjs/cqrs';
 import { NewPasswordUseCase } from './application/use.cases/new.password.useCase';
 import { PasswordRecoveryUseCase } from './application/use.cases/password.recovery.useCase';
+import {
+  BannedUserForBlog,
+  BannedUserForBlogSchema,
+} from './repositories/users/banned.users.for.blog.schema';
+import { BloggersUsersController } from './api/bloggers.api/users/bloggers.users.controller';
+import { BannedUsersForBlogRepository } from './repositories/users/banned.users.for.blog.repo';
 
 const useCases = [
   CheckCredentialsUseCase,
@@ -80,6 +86,7 @@ const useCases = [
       { name: Device.name, schema: DeviceSchema },
       { name: JwtBlackList.name, schema: JwtTokensSchema },
       { name: Like.name, schema: LikesSchema },
+      { name: BannedUserForBlog.name, schema: BannedUserForBlogSchema },
     ]),
   ],
   controllers: [
@@ -92,6 +99,7 @@ const useCases = [
     AuthController,
     DevicesController,
     BloggersBlogsController,
+    BloggersUsersController,
     BlogsSAController,
     UsersSAController,
   ],
@@ -118,6 +126,7 @@ const useCases = [
     DevicesQueryRepository,
     JwtRepository,
     LikesRepository,
+    BannedUsersForBlogRepository,
     ExtractUserIdFromHeadersUseCase,
     BlogExistRule,
     ...useCases,

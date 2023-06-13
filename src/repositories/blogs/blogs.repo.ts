@@ -52,4 +52,8 @@ export class BlogsRepository {
     await blog.save();
     return true;
   }
+
+  async getBlogByUserId(userId: string): Promise<BlogDocument> {
+    return this.blogModel.findOne({ userId: userId });
+  }
 }

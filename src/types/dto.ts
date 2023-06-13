@@ -16,6 +16,10 @@ export class UsersQueryDto extends PaginationDto {
   banStatus: string;
 }
 
+export class LoginQueryDto extends PaginationDto {
+  searchLoginTerm: string;
+}
+
 //DeleteParams
 export class UriParamsForBloggersApi {
   blogId: string;
@@ -101,5 +105,16 @@ export class CreateDeviceDto {
     public lastActiveDate: string,
     public deviceId: string,
     public userId: string,
+  ) {}
+}
+
+export class BannedUserForBlogDto {
+  constructor(
+    public userId: string,
+    public userLogin: string,
+    public isBanned: boolean,
+    public banReason: string,
+    public banDate: Date,
+    public blogId: string,
   ) {}
 }

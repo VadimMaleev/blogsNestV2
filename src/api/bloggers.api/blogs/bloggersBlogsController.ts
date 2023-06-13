@@ -21,8 +21,13 @@ import {
 } from '../../../types/input.models';
 import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
 import { BlogsService } from '../../../application/services/blogs.service';
-import { BlogsQueryDto, UriParamsForBloggersApi } from '../../../types/dto';
+import {
+  BlogsQueryDto,
+  PaginationDto,
+  UriParamsForBloggersApi,
+} from '../../../types/dto';
 import { BlogDocument } from '../../../repositories/blogs/blogs.schema';
+import { CommentsQueryRepository } from '../../../repositories/comments/comments.query.repo';
 
 @Controller('blogger/blogs')
 export class BloggersBlogsController {
@@ -30,6 +35,7 @@ export class BloggersBlogsController {
     protected blogsService: BlogsService,
     protected blogsQueryRepository: BlogsQueryRepository,
     protected postsService: PostsService,
+    protected commentsQueryRepository: CommentsQueryRepository,
   ) {}
 
   @Post()
@@ -124,5 +130,17 @@ export class BloggersBlogsController {
     const isDeleted = await this.postsService.deletePost(params, req.user.id);
     if (!isDeleted) throw new NotFoundException('Post not found');
     return isDeleted;
+  }
+
+  @Get('comments')
+  @UseGuards(JwtAuthGuard)
+  async getAllCommentsForBlogOwner(
+    @Query() query: PaginationDto,
+    @Request() req,
+  ) {
+    return this.commentsQueryRepository.findAllCommentsForBlogOwner(
+      req.user.id,
+      query,
+    );
   }
 }
