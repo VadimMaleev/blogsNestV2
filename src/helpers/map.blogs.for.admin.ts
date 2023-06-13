@@ -13,5 +13,6 @@ export const mapBlogsForAdmin = (blog: BlogDocument) => ({
   },
   banInfo: {
     isBanned: blog.isBanned,
+    banDate: blog.banDate,
   },
 });

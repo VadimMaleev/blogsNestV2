@@ -19,7 +19,7 @@ export class BlogsQueryRepository {
 
     const items = await this.blogModel
       .find(
-        { name: { $regex: searchNameTerm, $options: 'i' } },
+        { name: { $regex: searchNameTerm, $options: 'i' }, isBanned: false },
         { _id: 0, isBanned: 0, userId: 0, login: 0 },
       )
       .skip((pageNumber - 1) * pageSize)
@@ -54,8 +54,13 @@ export class BlogsQueryRepository {
     const sortDirection: 'asc' | 'desc' = query.sortDirection || 'desc';
 
     const items = await this.blogModel
+
       .find(
-        { userId: userId, name: { $regex: searchNameTerm, $options: 'i' } },
+        {
+          userId: userId,
+          name: { $regex: searchNameTerm, $options: 'i' },
+          isBanned: false,
+        },
         { _id: 0, userId: 0, login: 0, isBanned: 0 },
       )
       .skip((pageNumber - 1) * pageSize)
