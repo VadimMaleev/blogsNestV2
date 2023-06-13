@@ -11,4 +11,7 @@ export const mapBlogsForAdmin = (blog: BlogDocument) => ({
     userId: blog.userId,
     userLogin: blog.login,
   },
+  banInfo: {
+    isBanned: blog.isBanned,
+  },
 });

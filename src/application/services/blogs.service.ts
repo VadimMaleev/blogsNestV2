@@ -65,7 +65,10 @@ export class BlogsService {
     const blog = await this.blogsQueryRepository.getOneBlogById(id);
     if (!blog) throw new BadRequestException();
 
-    await this.blogsRepository.updateBanStatus(blog, banStatus);
+    let banDate = null;
+    if (banStatus) banDate = new Date();
+
+    await this.blogsRepository.updateBanStatus(blog, banStatus, banDate);
 
     await this.postsRepository.updateVisibleStatus(id, banStatus);
   }

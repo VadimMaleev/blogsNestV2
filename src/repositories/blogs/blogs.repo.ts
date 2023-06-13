@@ -46,8 +46,13 @@ export class BlogsRepository {
     return true;
   }
 
-  async updateBanStatus(blog: BlogDocument, banStatus: boolean) {
+  async updateBanStatus(
+    blog: BlogDocument,
+    banStatus: boolean,
+    banDate: Date | null,
+  ) {
     blog.isBanned = banStatus;
+    blog.banDate = banDate;
 
     await blog.save();
     return true;
