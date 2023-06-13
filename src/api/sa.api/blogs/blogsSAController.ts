@@ -15,7 +15,7 @@ import { BlogsService } from '../../../application/services/blogs.service';
 import { BindBlogToUserParams, BlogsQueryDto } from '../../../types/dto';
 import { BasicAuthGuard } from '../../../guards/basic.auth.guard';
 import { UsersQueryRepository } from '../../../repositories/users/users.query.repo';
-import { BanUserInputModel } from '../../../types/input.models';
+import { BanBlogInputModel } from '../../../types/input.models';
 
 @Controller('sa/blogs')
 export class BlogsSAController {
@@ -49,7 +49,7 @@ export class BlogsSAController {
   @UseGuards(BasicAuthGuard)
   async banOrUnbanBlog(
     @Param() id: string,
-    @Body() inputModel: BanUserInputModel,
+    @Body() inputModel: BanBlogInputModel,
   ) {
     return await this.blogsService.banOrUnbanBlog(id, inputModel.isBanned);
   }

@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
-import { BanUserInputModel } from '../../../types/input.models';
+import { BanUserForBlogInputModel } from '../../../types/input.models';
 import { UsersService } from '../../../application/services/users.service';
 import { LoginQueryDto } from '../../../types/dto';
 import { BlogsQueryRepository } from '../../../repositories/blogs/blogs.query.repo';
@@ -31,7 +31,7 @@ export class BloggersUsersController {
   @UseGuards(JwtAuthGuard)
   async updateUserBanStatusForBlog(
     @Param('id') id: string,
-    @Body() inputModel: BanUserInputModel,
+    @Body() inputModel: BanUserForBlogInputModel,
     @Request() req,
   ) {
     return this.usersService.updateUserBanStatusForBlog(

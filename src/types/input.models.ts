@@ -1,6 +1,7 @@
 import { IsBoolean, IsEnum, Length, Matches } from 'class-validator';
 import { LikesStatusEnum } from './types';
 import { Transform, TransformFnParams } from 'class-transformer';
+import { BlogExists } from '../helpers/validator.blogId';
 
 export class BlogCreateInputModelType {
   @Transform(({ value }: TransformFnParams) => value?.trim())
@@ -104,4 +105,15 @@ export class BanUserInputModel {
 export class BanBlogInputModel {
   @IsBoolean()
   isBanned: boolean;
+}
+
+export class BanUserForBlogInputModel {
+  @IsBoolean()
+  isBanned: boolean;
+
+  @Length(20)
+  banReason: string;
+
+  @BlogExists()
+  blogId: string;
 }
