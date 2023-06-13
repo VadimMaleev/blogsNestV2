@@ -48,7 +48,7 @@ export class BlogsSAController {
   @HttpCode(204)
   @UseGuards(BasicAuthGuard)
   async banOrUnbanBlog(
-    @Param() id: string,
+    @Param('id') id: string,
     @Body() inputModel: BanBlogInputModel,
   ) {
     return await this.blogsService.banOrUnbanBlog(id, inputModel.isBanned);
