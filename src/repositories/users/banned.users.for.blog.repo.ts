@@ -39,29 +39,24 @@ export class BannedUsersForBlogRepository {
     const sortDirection: 'asc' | 'desc' = query.sortDirection || 'desc';
     const login: string = query.searchLoginTerm || '';
 
-    const queryFetch = {};
+    const queryFetch = { blogId: blogId };
     if (login) {
       queryFetch['userLogin'] = { $regex: `(?i)(${login})` };
     }
 
     const items = await this.bannedUserForBlogModel
-      .find({
-        blogId: blogId,
-        ...queryFetch,
-      })
+      .find(queryFetch)
       .sort({ [sortBy]: sortDirection })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize);
 
     const itemsForResponse = items.map(mapBannedUsersForBlog);
-
+    const totalCount = await this.bannedUserForBlogModel.count(queryFetch);
     return {
-      pagesCount: Math.ceil(
-        (await this.bannedUserForBlogModel.count(queryFetch)) / pageSize,
-      ),
+      pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,
       pageSize: pageSize,
-      totalCount: await this.bannedUserForBlogModel.count(queryFetch),
+      totalCount: totalCount,
       items: itemsForResponse,
     };
   }
