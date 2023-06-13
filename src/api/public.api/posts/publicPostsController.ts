@@ -81,11 +81,13 @@ export class PublicPostsController {
   ) {
     const post = await this.postsQueryRepository.findPostById(id);
     if (!post) throw new NotFoundException();
+
     return await this.commentsService.createComment(
       id,
       inputModel.content,
       req.user.id,
       req.user.login,
+      post.blogId,
     );
   }
 

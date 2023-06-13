@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CommentsRepository } from '../../repositories/comments/comments.repo';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateCommentDto } from '../../types/dto';
 import { CommentsForResponse } from '../../types/types';
 import { UsersQueryRepository } from '../../repositories/users/users.query.repo';
 import { LikesRepository } from '../../repositories/likes/likes.repo';
+import { BannedUsersForBlogRepository } from '../../repositories/users/banned.users.for.blog.repo';
 
 @Injectable()
 export class CommentsService {
@@ -12,6 +13,7 @@ export class CommentsService {
     protected commentsRepository: CommentsRepository,
     protected usersQueryRepository: UsersQueryRepository,
     protected likesRepository: LikesRepository,
+    protected bannedUsersForBlogRepository: BannedUsersForBlogRepository,
   ) {}
   async deleteCommentById(id: string): Promise<boolean> {
     return await this.commentsRepository.deleteComment(id);
@@ -22,7 +24,16 @@ export class CommentsService {
     content: string,
     userId: string,
     login: string,
+    blogId: string,
   ): Promise<CommentsForResponse> {
+    const isBannedUser =
+      await this.bannedUsersForBlogRepository.findBannedUserByUserIdAndBlogId(
+        userId,
+        blogId,
+      );
+
+    if (isBannedUser) throw new HttpException('Not your own', 403);
+
     const newComment = new CreateCommentDto(
       uuidv4(),
       content,

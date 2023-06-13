@@ -65,4 +65,11 @@ export class BannedUsersForBlogRepository {
       items: itemsForResponse,
     };
   }
+
+  async findBannedUserByUserIdAndBlogId(userId: string, blogId: string) {
+    return this.bannedUserForBlogModel.findOne({
+      blogId: blogId,
+      userId: userId,
+    });
+  }
 }
