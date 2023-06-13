@@ -33,7 +33,7 @@ export class Blog {
   @Prop({ required: true })
   isBanned: boolean;
 
-  @Prop()
+  @Prop({ nullable: true, default: null })
   banDate: Date | null;
 
   updateBlog(updateData: BlogCreateInputModelType) {
