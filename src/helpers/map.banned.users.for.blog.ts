@@ -4,7 +4,7 @@ export const mapBannedUsersForBlog = (
   bannedUser: BannedUsersForBlogDocument,
 ) => ({
   id: bannedUser.userId,
-  login: bannedUser.userLogin,
+  login: bannedUser.login,
   banInfo: {
     isBanned: bannedUser.isBanned,
     banDate: bannedUser.banDate,
