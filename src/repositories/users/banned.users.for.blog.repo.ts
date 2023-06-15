@@ -37,21 +37,22 @@ export class BannedUsersForBlogRepository {
     const pageSize: number = Number(query.pageSize) || 10;
     const sortBy: string = query.sortBy || 'createdAt';
     const sortDirection: 'asc' | 'desc' = query.sortDirection || 'desc';
-    const login: string = query.searchLoginTerm || '';
-
-    const queryFetch = { blogId: blogId };
-    if (login) {
-      queryFetch['userLogin'] = { $regex: `(?i)(${login})` };
-    }
+    const loginSearchTerm: string = query.searchLoginTerm || '';
 
     const items = await this.bannedUserForBlogModel
-      .find(queryFetch)
+      .find({
+        blogId: blogId,
+        userLogin: { $regex: loginSearchTerm, $options: 'i' },
+      })
       .sort({ [sortBy]: sortDirection })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize);
 
     const itemsForResponse = items.map(mapBannedUsersForBlog);
-    const totalCount = await this.bannedUserForBlogModel.count(queryFetch);
+    const totalCount = await this.bannedUserForBlogModel.count({
+      blogId: blogId,
+      userLogin: { $regex: loginSearchTerm, $options: 'i' },
+    });
     return {
       pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,
