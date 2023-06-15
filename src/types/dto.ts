@@ -111,7 +111,7 @@ export class CreateDeviceDto {
 export class BannedUserForBlogDto {
   constructor(
     public userId: string,
-    public userLogin: string,
+    public login: string,
     public isBanned: boolean,
     public banReason: string,
     public banDate: Date,
