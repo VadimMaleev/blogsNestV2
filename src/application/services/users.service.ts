@@ -3,7 +3,11 @@ import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import { UsersRepository } from '../../repositories/users/users.repo';
 import { BannedUserForBlogDto, CreateUserDto } from '../../types/dto';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UsersForResponse } from '../../types/types';
 import { UsersQueryRepository } from '../../repositories/users/users.query.repo';
 import { EmailAdapter } from '../../adapters/email-adapter';
@@ -124,7 +128,7 @@ export class UsersService {
     userIdBlogOwner: string,
   ) {
     const user: UserDocument = await this.usersQueryRepository.findUserById(id);
-    if (!user) throw new BadRequestException();
+    if (!user) throw new NotFoundException();
 
     const blog: BlogDocument = await this.blogsRepository.getBlogByUserId(
       userIdBlogOwner,
