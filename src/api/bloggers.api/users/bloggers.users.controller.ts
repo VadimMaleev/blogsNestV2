@@ -18,7 +18,7 @@ import { BlogsQueryRepository } from '../../../repositories/blogs/blogs.query.re
 import { BlogDocument } from '../../../repositories/blogs/blogs.schema';
 import { BannedUsersForBlogRepository } from '../../../repositories/users/banned.users.for.blog.repo';
 
-@Controller('bloggers/users')
+@Controller('blogger/users')
 export class BloggersUsersController {
   constructor(
     protected usersService: UsersService,
