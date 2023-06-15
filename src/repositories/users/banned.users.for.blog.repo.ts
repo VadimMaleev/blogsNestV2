@@ -42,7 +42,7 @@ export class BannedUsersForBlogRepository {
     const items = await this.bannedUserForBlogModel
       .find({
         blogId: blogId,
-        userLogin: { $regex: loginSearchTerm, $options: 'i' },
+        login: { $regex: loginSearchTerm, $options: 'i' },
       })
       .sort({ [sortBy]: sortDirection })
       .skip((pageNumber - 1) * pageSize)
@@ -51,7 +51,7 @@ export class BannedUsersForBlogRepository {
     const itemsForResponse = items.map(mapBannedUsersForBlog);
     const totalCount = await this.bannedUserForBlogModel.count({
       blogId: blogId,
-      userLogin: { $regex: loginSearchTerm, $options: 'i' },
+      login: { $regex: loginSearchTerm, $options: 'i' },
     });
     return {
       pagesCount: Math.ceil(totalCount / pageSize),
