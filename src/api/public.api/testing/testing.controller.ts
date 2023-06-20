@@ -8,6 +8,10 @@ import {
 } from '../../../repositories/comments/comments.shema';
 import { User, UserDocument } from '../../../repositories/users/users.schema';
 import { Blog, BlogDocument } from '../../../repositories/blogs/blogs.schema';
+import {
+  BannedUserForBlog,
+  BannedUsersForBlogDocument,
+} from '../../../repositories/users/banned.users.for.blog.schema';
 
 @Controller('testing')
 export class TestingController {
@@ -16,6 +20,8 @@ export class TestingController {
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
+    @InjectModel(BannedUserForBlog.name)
+    private bannedUserForBlogModel: Model<BannedUsersForBlogDocument>,
   ) {}
   @Delete('all-data')
   @HttpCode(204)
@@ -24,6 +30,7 @@ export class TestingController {
     await this.postModel.deleteMany();
     await this.commentModel.deleteMany();
     await this.userModel.deleteMany();
+    await this.bannedUserForBlogModel.deleteMany();
     return true;
   }
 }
