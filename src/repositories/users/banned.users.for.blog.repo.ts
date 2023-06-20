@@ -44,9 +44,9 @@ export class BannedUsersForBlogRepository {
         blogId: blogId,
         login: { $regex: loginSearchTerm, $options: 'i' },
       })
-      .sort({ [sortBy]: sortDirection })
       .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize);
+      .limit(pageSize)
+      .sort({ [sortBy]: sortDirection });
 
     const itemsForResponse = items.map(mapBannedUsersForBlog);
     const totalCount = await this.bannedUserForBlogModel.count({

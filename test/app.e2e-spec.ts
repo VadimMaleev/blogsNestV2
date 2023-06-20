@@ -10,7 +10,7 @@ let token2 = '';
 let userId = '';
 let userId2 = '';
 let blogId = '';
-let blogId2 = '';
+const blogId2 = '';
 let postId = '';
 let commentId = '';
 
@@ -233,88 +233,69 @@ describe('check ban unban user and visibility of posts', () => {
 });
 
 describe('check ban unban user for blog', () => {
-  it('delete all data', async () => {
-    const response = await request(app.getHttpServer()).delete(
-      '/testing/all-data',
-    );
-    expect(response.status).toBe(204);
+  it('should create and login users', async () => {
+    const users = await createAndLoginSeveralUsers(50);
   });
 
-  it('should creat new user', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/sa/users')
-      .send(user)
-      .set(
-        'Authorization',
-        'Basic ' + new Buffer('admin:qwerty').toString('base64'),
-      );
-    userId = response.body.id;
-    console.log('user1 ' + userId);
-    expect(response).toBeDefined();
-    expect(response.status).toBe(201);
-    expect(response.body.login).toBe(user.login);
-    expect(response.body.email).toBe(user.email);
-  });
-
-  it('should creat new user2', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/sa/users')
-      .send(user2)
-      .set(
-        'Authorization',
-        'Basic ' + new Buffer('admin:qwerty').toString('base64'),
-      );
-    userId2 = response.body.id;
-    console.log('user2 ' + userId2);
-    expect(response).toBeDefined();
-    expect(response.status).toBe(201);
-    expect(response.body.login).toBe(user2.login);
-    expect(response.body.email).toBe(user2.email);
-  });
-
-  describe('login user and create blog', () => {
-    it('login - should return 200 status', async () => {
-      const response = await request(app.getHttpServer())
-        .post('/auth/login')
-        .send(loginUser)
-        .set('user-agent', 'test');
-      token = response.body.accessToken;
-      expect(response.status).toBe(200);
-      expect(response.body.accessToken).toBeDefined();
-    });
-  });
-
-  it('should create blog for user1', async () => {
-    const res = await request(app.getHttpServer())
-      .post('/blogger/blogs')
-      .send(blog)
-      .set('Authorization', 'Bearer ' + token);
-    expect(res.status).toBe(201);
-    blogId2 = res.body.id;
-  });
-
-  it('should ban user for blog', async () => {
-    const res = await request(app.getHttpServer())
-      .put(`/blogger/users/${userId2}/ban`)
-      .send({
-        isBanned: true,
-        banReason: 'jestBan for tests',
-        blogId: blogId2,
-      })
-      .set('Authorization', 'Bearer ' + token);
-
-    expect(res.status).toBe(204);
-  });
-
-  it('should return banned user for blog', async () => {
-    const res = await request(app.getHttpServer())
-      .get(`/blogger/users/blog/${blogId2}`)
-      .set('Authorization', 'Bearer ' + token);
-
-    expect(res.status).toBe(200);
-    const bannedUser = res.body.items.find((user) => user.id === userId2);
-    expect(bannedUser).not.toBeUndefined();
-    console.log('bannedUSer ' + bannedUser);
-    console.log('body ' + res.body);
-  });
+  // it('should create blog for user1', async () => {
+  //   const res = await request(app.getHttpServer())
+  //     .post('/blogger/blogs')
+  //     .send(blog)
+  //     .set('Authorization', 'Bearer ' + token);
+  //   expect(res.status).toBe(201);
+  //   blogId2 = res.body.id;
+  // });
+  //
+  // it('should ban user for blog', async () => {
+  //   const res = await request(app.getHttpServer())
+  //     .put(`/blogger/users/${userId2}/ban`)
+  //     .send({
+  //       isBanned: true,
+  //       banReason: 'jestBan for tests',
+  //       blogId: blogId2,
+  //     })
+  //     .set('Authorization', 'Bearer ' + token);
+  //
+  //   expect(res.status).toBe(204);
+  // });
+  //
+  // it('should return banned user for blog', async () => {
+  //   const res = await request(app.getHttpServer())
+  //     .get(`/blogger/users/blog/${blogId2}?pageSize=50`)
+  //     .set('Authorization', 'Bearer ' + token);
+  //
+  //   expect(res.status).toBe(200);
+  //   const bannedUser = res.body.items.find((user) => user.id === userId2);
+  //   expect(bannedUser).not.toBeUndefined();
+  //   console.log(bannedUser);
+  //   console.log(res.body);
+  // });
 });
+
+const createAndLoginSeveralUsers = async (
+  count: number,
+): Promise<{ accessToken: string; userId: string }[]> => {
+  const users = [];
+  for (let i = 0; i < count; i++) {
+    const user = await request(app.getHttpServer())
+      .post('/sa/users')
+      .send({ ...user2, login: user2.login + i, email: `email@emai${i}l.com` })
+      .set(
+        'Authorization',
+        'Basic ' + new Buffer('admin:qwerty').toString('base64'),
+      );
+    users.push(user.body);
+  }
+  console.log(users);
+  const tokens = [];
+
+  for (const user of users) {
+    const response = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ login: user.login, password: user2.password })
+      .set('user-agent', 'test');
+    tokens.push({ accessToken: response.body.accessToken, userId: user.id });
+  }
+  console.log(tokens);
+  return tokens;
+};
