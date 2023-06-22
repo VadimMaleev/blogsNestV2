@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CommentsRepository } from '../../repositories/comments/comments.repo';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateCommentDto } from '../../types/dto';
@@ -32,7 +32,7 @@ export class CommentsService {
         blogId,
       );
 
-    if (isBannedUser) throw new UnauthorizedException('You Banned');
+    if (isBannedUser) throw new HttpException('You Banned', 403);
 
     const newComment = new CreateCommentDto(
       uuidv4(),

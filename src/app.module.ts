@@ -73,10 +73,10 @@ const useCases = [
     CqrsModule,
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.mongooseUri),
-    ThrottlerModule.forRoot({
-      ttl: 10,
-      limit: 5,
-    }),
+    // ThrottlerModule.forRoot({
+    //   ttl: 10,
+    //   limit: 5,
+    // }),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
       { name: User.name, schema: UserSchema },

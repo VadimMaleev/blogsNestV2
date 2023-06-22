@@ -5,6 +5,7 @@ import { UsersRepository } from '../../repositories/users/users.repo';
 import { BannedUserForBlogDto, CreateUserDto } from '../../types/dto';
 import {
   BadRequestException,
+  HttpException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -17,8 +18,9 @@ import { PostsRepository } from '../../repositories/posts/posts.repo';
 import { CommentsRepository } from '../../repositories/comments/comments.repo';
 import { LikesRepository } from '../../repositories/likes/likes.repo';
 import { AuthService } from './auth.service';
-import { BlogsRepository } from '../../repositories/blogs/blogs.repo';
 import { BannedUsersForBlogRepository } from '../../repositories/users/banned.users.for.blog.repo';
+import { BlogDocument } from '../../repositories/blogs/blogs.schema';
+import { BlogsQueryRepository } from '../../repositories/blogs/blogs.query.repo';
 
 @Injectable()
 export class UsersService {
@@ -31,7 +33,7 @@ export class UsersService {
     protected commentsRepository: CommentsRepository,
     protected likesRepository: LikesRepository,
     protected authService: AuthService,
-    protected blogsRepository: BlogsRepository,
+    protected blogsQueryRepository: BlogsQueryRepository,
     protected bannedUsersForBlogRepository: BannedUsersForBlogRepository,
   ) {}
 
@@ -125,9 +127,17 @@ export class UsersService {
     banStatus: boolean,
     banReason: string,
     blogId: string,
+    userIdBlogOwner: string,
   ) {
     const user: UserDocument = await this.usersQueryRepository.findUserById(id);
     if (!user) throw new NotFoundException();
+
+    const blog: BlogDocument = await this.blogsQueryRepository.getOneBlogById(
+      blogId,
+    );
+
+    if (userIdBlogOwner !== blog.userId)
+      throw new HttpException('Not Your Own', 403);
 
     const bannedUser = new BannedUserForBlogDto(
       id,

@@ -7,6 +7,7 @@ import {
   Param,
   Put,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwt.auth.guard';
@@ -31,12 +32,14 @@ export class BloggersUsersController {
   async updateUserBanStatusForBlog(
     @Param('id') id: string,
     @Body() inputModel: BanUserForBlogInputModel,
+    @Request() req,
   ) {
     return this.usersService.updateUserBanStatusForBlog(
       id,
       inputModel.isBanned,
       inputModel.banReason,
       inputModel.blogId,
+      req.user.id,
     );
   }
 
