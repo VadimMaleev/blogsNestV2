@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpException,
   NotFoundException,
   Param,
   Put,
@@ -49,11 +50,15 @@ export class BloggersUsersController {
   async getBannedUsersForBLog(
     @Param('id') id: string,
     @Query() query: LoginQueryDto,
+    @Request() req,
   ) {
     const blog: BlogDocument = await this.blogQueryRepository.getOneBlogById(
       id,
     );
     if (!blog) throw new NotFoundException('Blog Not Found');
+    if (req.user.id !== blog.userId)
+      throw new HttpException('Not Your Own', 403);
+
     return this.bannedUsersForBlogRepository.getBannedUsersForBlog(
       blog.id,
       query,
