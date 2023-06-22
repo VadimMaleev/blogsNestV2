@@ -11,11 +11,26 @@ const blog = {
   websiteUrl: 'www.test.com',
 };
 
+const blog2 = {
+  name: 'blogName222',
+  description: 'blogDesc222',
+  websiteUrl: 'www.test222.com',
+};
+
 const user2 = {
   login: 'login222TEST',
   email: 'testing222byme@gmail.com',
   password: '123TEST',
 };
+
+const userForBan = {
+  login: 'login333TEST',
+  email: 'testing333byme@gmail.com',
+  password: '123TEST',
+};
+
+let userIdForBan = '';
+let blogId2 = '';
 
 beforeAll(async () => {
   const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -24,6 +39,8 @@ beforeAll(async () => {
 
   app = moduleFixture.createNestApplication();
   await app.init();
+
+  await request(app.getHttpServer()).delete('/testing/all-data');
 });
 
 afterAll(async () => {
@@ -33,8 +50,9 @@ afterAll(async () => {
 describe('check ban unban user for blog', () => {
   let users = [];
   let blogIdForBanUsers = '';
+
   it('should create and login users', async () => {
-    users = await createAndLoginSeveralUsers(20);
+    users = await createAndLoginSeveralUsers(5);
   });
 
   it('should create blog for user[0]', async () => {
@@ -60,18 +78,56 @@ describe('check ban unban user for blog', () => {
     }
   });
 
-  it('should return banned user for blog', async () => {
+  it('should return banned users for blog', async () => {
     const res = await request(app.getHttpServer())
       .get(`/blogger/users/blog/${blogIdForBanUsers}?pageSize=50`)
       .set('Authorization', 'Bearer ' + users[0].accessToken);
 
     expect(res.status).toBe(200);
-    const bannedUser = res.body.items.find(
-      (user) => user.id === users[19].userId,
-    );
-    expect(bannedUser).not.toBeUndefined();
+  });
+  //from this
+  it('should create new user for ban', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/sa/users')
+      .send(userForBan)
+      .set(
+        'Authorization',
+        'Basic ' + new Buffer('admin:qwerty').toString('base64'),
+      );
+    expect(res).toBeDefined();
+    expect(res.status).toBe(201);
+    userIdForBan = res.body.id;
+  });
+
+  it('should create new blog2 for user[0]', async () => {
+    const blogRes = await request(app.getHttpServer())
+      .post('/blogger/blogs')
+      .send(blog2)
+      .set('Authorization', 'Bearer ' + users[0].accessToken);
+    blogId2 = blogRes.body.id;
+  });
+
+  it('should ban user3', async () => {
+    await request(app.getHttpServer())
+      .put(`/blogger/users/${userIdForBan}/ban`)
+      .send({
+        isBanned: true,
+        banReason: 'jestBan for tests',
+        blogId: blogId2,
+      })
+      .set('Authorization', 'Bearer ' + users[0].accessToken);
+  });
+
+  it('should return one banned user for blog2', async () => {
+    const res = await request(app.getHttpServer())
+      .get(`/blogger/users/blog/${blogId2}?pageSize=50`)
+      .set('Authorization', 'Bearer ' + users[0].accessToken);
+
+    expect(res.status).toBe(200);
+    const bannedUser = res.body.items.find((user) => user.id === userIdForBan);
     console.log(bannedUser);
     console.log(res.body);
+    expect(bannedUser).not.toBeUndefined();
   });
 });
 

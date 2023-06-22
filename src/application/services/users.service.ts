@@ -18,7 +18,6 @@ import { CommentsRepository } from '../../repositories/comments/comments.repo';
 import { LikesRepository } from '../../repositories/likes/likes.repo';
 import { AuthService } from './auth.service';
 import { BlogsRepository } from '../../repositories/blogs/blogs.repo';
-import { BlogDocument } from '../../repositories/blogs/blogs.schema';
 import { BannedUsersForBlogRepository } from '../../repositories/users/banned.users.for.blog.repo';
 
 @Injectable()
@@ -125,14 +124,10 @@ export class UsersService {
     id: string,
     banStatus: boolean,
     banReason: string,
-    userIdBlogOwner: string,
+    blogId: string,
   ) {
     const user: UserDocument = await this.usersQueryRepository.findUserById(id);
     if (!user) throw new NotFoundException();
-
-    const blog: BlogDocument = await this.blogsRepository.getBlogByUserId(
-      userIdBlogOwner,
-    );
 
     const bannedUser = new BannedUserForBlogDto(
       id,
@@ -140,7 +135,7 @@ export class UsersService {
       banStatus,
       banReason,
       new Date(),
-      blog.id,
+      blogId,
     );
 
     if (banStatus) {
