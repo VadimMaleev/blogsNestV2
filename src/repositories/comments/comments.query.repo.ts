@@ -99,7 +99,7 @@ export class CommentsQueryRepository {
     ]);
 
     return {
-      pagesCount: totalCount[0].Total / pageSize,
+      pagesCount: Math.floor(totalCount[0].Total / pageSize),
       page: pageNumber,
       pageSize: pageSize,
       totalCount: totalCount[0].Total,
