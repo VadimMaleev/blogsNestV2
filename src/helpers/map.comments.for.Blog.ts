@@ -1,7 +1,7 @@
 export const mapCommentsForBlog = (obj, userId: string) => {
   let myStatus = 'None';
   let likesCount = 0;
-  let dislikeCount = 0;
+  let dislikesCount = 0;
 
   obj.likesInfo.forEach((like) => {
     if (like.userId === userId) {
@@ -13,7 +13,7 @@ export const mapCommentsForBlog = (obj, userId: string) => {
     }
 
     if (like.status === 'dislike') {
-      dislikeCount += 1;
+      dislikesCount += 1;
     }
   });
 
@@ -27,7 +27,7 @@ export const mapCommentsForBlog = (obj, userId: string) => {
     },
     likesInfo: {
       likesCount,
-      dislikeCount,
+      dislikesCount,
       myStatus,
     },
     postInfo: {
