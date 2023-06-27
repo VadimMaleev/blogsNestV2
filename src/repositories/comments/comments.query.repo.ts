@@ -89,7 +89,9 @@ export class CommentsQueryRepository {
       { $limit: pageSize },
     ]);
 
-    const itemsForResponse = items.map(mapCommentsForBlog);
+    const itemsForResponse = items.map((item) =>
+      mapCommentsForBlog(item, userId),
+    );
 
     const totalCount = await this.commentModel.aggregate([
       ...this.lookUpAllCommentsForBlogOwner(userId),
@@ -117,6 +119,14 @@ export class CommentsQueryRepository {
       },
       { $unwind: { path: '$postInfo' } },
       { $match: { 'postInfo.userId': userId, isVisible: true } },
+      {
+        $lookup: {
+          from: 'likes',
+          localField: 'id',
+          foreignField: 'idOfEntity',
+          as: 'likesInfo',
+        },
+      },
     ];
   }
 }
